@@ -1,0 +1,12 @@
+#
+# Visual Studio Code
+#
+.settings/
+.classpath
+.factorypath
+.project
+.vscode/
+
+# Gradle
+.gradle
+build
