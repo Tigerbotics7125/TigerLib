@@ -25,37 +25,37 @@
 1. Initialize a git repo in your project by running `git init` in the root of your FRC project.
 1. Add this project as a git submodule with `git submodule add https://github.com/tigerbotics7125/tigerlib`
 1. Add the following snippet to `settings.gradle`:
-```groovy
-include(":TigerLib")
+    ```groovy
+    include(":TigerLib")
 
-rootProject.children.each {
-    setUpChildProject(it)
-}
-
-private void setUpChildProject(ProjectDescriptor project) {
-    /*
-     * Instead of every file being named build.gradle.kts we instead use the name ${project.name}.gradle.kts.
-     * This is much nicer for searching for the file in your IDE.
-     */
-    final String groovyName = "${project.name}.gradle"
-    final String kotlinName = "${project.name}.gradle.kts"
-    project.buildFileName = groovyName
-    if (!project.buildFile.isFile()) {
-        project.buildFileName = kotlinName
+    rootProject.children.each {
+        setUpChildProject(it)
     }
-    assert project.buildFile.isFile(): "File named $groovyName or $kotlinName must exist."
-    project.children.each { setUpChildProject(it) }
-}
-```
+
+    private void setUpChildProject(ProjectDescriptor project) {
+        /*
+        * Instead of every file being named build.gradle.kts we instead use the name ${project.name}.gradle.kts.
+        * This is much nicer for searching for the file in your IDE.
+        */
+        final String groovyName = "${project.name}.gradle"
+        final String kotlinName = "${project.name}.gradle.kts"
+        project.buildFileName = groovyName
+        if (!project.buildFile.isFile()) {
+            project.buildFileName = kotlinName
+        }
+        assert project.buildFile.isFile(): "File named $groovyName or $kotlinName must exist."
+        project.children.each { setUpChildProject(it) }
+    }
+    ```
 1. Add the following snippet to the `dependencies {}` block in `build.gradle`:
-```groovy
-dependencies {
+    ```groovy
+    dependencies {
 
-    /* other dependencies */
+        /* other dependencies */
 
-    implementation project(":TigerLib")
-}
-```
+        implementation project(":TigerLib")
+    }
+    ```
 1. Run `./gradlew build` to build the project, and you should be up and running.
 
 ### Contributors & Acknowledgments
