@@ -1,53 +1,54 @@
 plugins {
-    id "java"
-    id "edu.wpi.first.GradleRIO" version "2022.4.1"
-    id "com.diffplug.spotless" version "6.1.0"
+  id "java"
+  id "edu.wpi.first.GradleRIO" version "2022.4.1"
+  id "com.diffplug.spotless" version "6.1.0"
 }
 
-sourceCompatibility = JavaVersion.VERSION_16
-targetCompatibility = JavaVersion.VERSION_16
+sourceCompatibility = JavaVersion.VERSION_11
+targetCompatibility = JavaVersion.VERSION_11
 
 repositories {
-    mavenCentral()
+  mavenCentral()
 }
 
 dependencies {
-    implementation wpi.java.deps.wpilib()
-    implementation wpi.java.vendor.java()
+  implementation wpi.java.deps.wpilib()
+  implementation wpi.java.vendor.java()
 
-    testImplementation 'junit:junit:4.12'
+  testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
+  testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
 }
 
 spotless {
-    java {
-        target fileTree('.') {
-            include '**/*.java'
-            exclude '**/build/**', '**/build-*/**'
-        }
-        toggleOffOn()
-        googleJavaFormat()
-        licenseHeader '/**\n * Copyright (C) $YEAR, Tigerbotics\' team members and all other contributors.\n * Open source software; you can modify and/or share this software.\n */'
-        removeUnusedImports()
-        trimTrailingWhitespace()
-        endWithNewline()
+  java {
+    target fileTree('.') {
+      include '**/*.java'
+      exclude '**/build/**', '**/build-*/**'
     }
-    groovyGradle {
-        target fileTree('.') {
-            include '**/*.gradle'
-            exclude '**/build/**', '**/build-*/**'
-        }
-        greclipse()
-        indentWithSpaces(4)
-        trimTrailingWhitespace()
-        endWithNewline()
+    toggleOffOn()
+    googleJavaFormat('1.8').aosp().reflowLongStrings()
+    licenseHeader '/**\n * Copyright (C) $YEAR, Tigerbotics\' team members and all other contributors.\n * Open source software; you can modify and/or share this software.\n */'
+    removeUnusedImports()
+    trimTrailingWhitespace()
+    endWithNewline()
+  }
+  groovyGradle {
+    target fileTree('.') {
+      include '**/*.gradle'
+      exclude '**/build/**', '**/build-*/**'
     }
-    format 'misc', {
-        target fileTree('.') {
-            include '**/*.md', '**/.gitignore'
-            exclude '**/build/**', '**/build-*/**'
-        }
-        trimTrailingWhitespace()
-        indentWithSpaces(2)
-        endWithNewline()
+    greclipse()
+    indentWithSpaces(2)
+    trimTrailingWhitespace()
+    endWithNewline()
+  }
+  format 'misc', {
+    target fileTree('.') {
+      include '**/*.md', '**/.gitignore', '**/*.yaml', '**/*.yml'
+      exclude '**/build/**', '**/build-*/**'
     }
+    trimTrailingWhitespace()
+    indentWithSpaces(2)
+    endWithNewline()
+  }
 }
