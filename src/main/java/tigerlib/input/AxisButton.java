@@ -54,7 +54,7 @@ public class AxisButton extends Button {
 
     /** @return The axis value * -1 if the axis is inverted. */
     public double getVal() {
-        return mJoystick.getRawAxis(mAxis * (mInverted ? -1 : 1));
+        return mJoystick.getRawAxis(mAxis) * (mInverted ? -1 : 1);
     }
 
     /** @return Whether the axis is pressed. */
