@@ -1,20 +1,20 @@
 # TigerLib
 
-![GitHub tag (latest SemVer)](https://img.shields.io/github/v/tag/Tigerbotics7125/TigerLib?color=success&label=Latest&style=plastic)
-![GitHub tag (latest SemVer pre-release)](https://img.shields.io/github/v/tag/Tigerbotics7125/TigerLib?color=important&include_prereleases&label=Pre-release&style=plastic)
+[![GitHub tag (latest SemVer)](https://img.shields.io/github/v/tag/Tigerbotics7125/TigerLib?color=success&label=Latest&style=plastic)](https://github.com/Tigerbotics7125/TigerLib/releases)
+[![GitHub tag (latest SemVer pre-release)](https://img.shields.io/github/v/tag/Tigerbotics7125/TigerLib?color=important&include_prereleases&label=Pre-release&style=plastic)](https://github.com/Tigerbotics7125/TigerLib/releases)
 
-![Lines of code](https://img.shields.io/tokei/lines/github/tigerbotics7125/TigerLib?style=plastic)
+[![Lines of code](https://img.shields.io/tokei/lines/github/tigerbotics7125/TigerLib?style=plastic)](#)
 
 ## Tigerbotic's general library for FRC Robots.
 
 
-![GitHub issues](https://img.shields.io/github/issues/Tigerbotics7125/TigerLib?style=plastic)
+[![GitHub issues](https://img.shields.io/github/issues/Tigerbotics7125/TigerLib?style=plastic)](https://github.com/Tigerbotics7125/TigerLib/issues?q=is%3Aissue+is%3Aopen)
 
-![GitHub closed issues](https://img.shields.io/github/issues-closed-raw/Tigerbotics7125/TigerLib?style=plastic)
+[![GitHub closed issues](https://img.shields.io/github/issues-closed-raw/Tigerbotics7125/TigerLib?style=plastic)](https://github.com/Tigerbotics7125/TigerLib/issues?q=is%3Aissue+is%3Aclosed)
 
-![GitHub pull requests](https://img.shields.io/github/issues-pr/Tigerbotics7125/TigerLib?style=plastic)
+[![GitHub pull requests](https://img.shields.io/github/issues-pr/Tigerbotics7125/TigerLib?style=plastic)](https://github.com/Tigerbotics7125/TigerLib/pulls?q=is%3Apr+is%3Aopen)
 
-![GitHub closed pull requests](https://img.shields.io/github/issues-pr-closed-raw/Tigerbotics7125/TigerLib?style=plastic)
+[![GitHub closed pull requests](https://img.shields.io/github/issues-pr-closed-raw/Tigerbotics7125/TigerLib?style=plastic)](https://github.com/Tigerbotics7125/TigerLib/pulls?q=is%3Apr+is%3Aclosed)
 
 ## Installation:
 
