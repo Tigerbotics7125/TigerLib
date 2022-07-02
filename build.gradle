@@ -39,26 +39,19 @@ spotless {
       include '**/*.java'
       exclude '**/build/**', '**/build-*/**'
     }
-    toggleOffOn()
+    licenseHeaderFile 'LICENSE_SHORTHAND'
+
     googleJavaFormat('1.8').aosp().reflowLongStrings()
-    licenseHeader '/**\n * Copyright (C) $YEAR, Tigerbotics\' team members and all other contributors.\n * Open source software; you can modify and/or share this software.\n */'
+
+    trimTrailingWhitespace()
+    endWithNewline()
+
+    importOrder('\\#', 'io.github.tigerbotics7125.tigerLib', 'io.github.tigerbotics7125', 'edu.wpi', '')
     removeUnusedImports()
-    trimTrailingWhitespace()
-    endWithNewline()
-  }
-  groovyGradle {
-    target fileTree('.') {
-      include '**/*.gradle'
-      exclude '**/build/**', '**/build-*/**'
-    }
-    greclipse()
-    indentWithSpaces(2)
-    trimTrailingWhitespace()
-    endWithNewline()
   }
   format 'misc', {
     target fileTree('.') {
-      include '**/*.md', '**/.gitignore', '**/*.yaml', '**/*.yml'
+      include '**/*.gradle', '**/*.md', '**/.gitignore', '**/*.yaml', '**/*.yml'
       exclude '**/build/**', '**/build-*/**'
     }
     trimTrailingWhitespace()
