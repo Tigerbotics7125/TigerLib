@@ -8,7 +8,6 @@ plugins {
 }
 
 group = 'io.github.tigerbotics7125'
-version = '1.0.0'
 
 sourceCompatibility = JavaVersion.VERSION_11
 targetCompatibility = JavaVersion.VERSION_11
@@ -24,10 +23,9 @@ dependencies {
 publishing {
   publications {
     maven(MavenPublication) {
-      groupId = "${groupId}.tigerlib"
-      artifactId = "library"
-      version = "${version}"
-
+      groupId = "${groupId}"
+      artifactId = "tigerlib"
+      version = project.properties["version"]
       from components.java
     }
   }
