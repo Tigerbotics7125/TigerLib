@@ -1,8 +1,9 @@
-/**
- * Copyright (C) 2022, Tigerbotics' team members and all other contributors.
- * Open source software; you can modify and/or share this software.
+/*
+ * Copyright (c) 2022 Tigerbotics and it's members. All rights reserved.
+ * This work is licensed under the terms of the GNU GPLv3 license
+ * found in the root directory of this project.
  */
-package tigerlib.input.controller;
+package io.github.tigerbotics7125.tigerlib.input.oi;
 
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
