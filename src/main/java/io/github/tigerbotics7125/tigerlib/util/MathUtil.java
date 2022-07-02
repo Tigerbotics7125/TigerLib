@@ -19,6 +19,7 @@ public class MathUtil {
      * @param oldMax initial upper boundery
      * @param newMin new lower boundery
      * @param newMax new upper boundery
+     * @return x scaled from old to new.
      */
     public static double minMaxScaling(
             double x, double oldMin, double oldMax, double newMin, double newMax) {

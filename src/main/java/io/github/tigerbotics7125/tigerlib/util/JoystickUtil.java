@@ -14,7 +14,7 @@ public class JoystickUtil {
      *
      * @param x input
      * @param s sensitivity
-     * @return
+     * @return preserve sign power.
      */
     public static double ramp(double x, double s) {
         return Math.signum(x) * Math.pow(Math.abs(x), s);
@@ -25,6 +25,7 @@ public class JoystickUtil {
      *
      * @param x input
      * @param d deadband
+     * @return a deadbanded value
      */
     public static double deadband(double x, double d) {
         if (d < 0) throw new IllegalArgumentException("Deadband must be non-negative");
@@ -34,11 +35,11 @@ public class JoystickUtil {
     /**
      * Deadzone inputs.
      *
-     * <p>Visualization {@linkplain https://www.desmos.com/calculator/enoyillzg6}
+     * <p>Visualization https://www.desmos.com/calculator/enoyillzg6
      *
      * @param input Pair of inputs, to deadzone.
-     * @param deadzone
-     * @return
+     * @param deadzone how much to deadzone.
+     * @return A deadzoned pair.
      */
     public static Pair<Double, Double> deadzone(Pair<Double, Double> input, double deadzone) {
         return Pair.of(deadband(input.getFirst(), deadzone), deadband(input.getSecond(), deadzone));
@@ -50,6 +51,7 @@ public class JoystickUtil {
      * @param x input
      * @param min lower boundery
      * @param max upper boundery
+     * @return x within mix and max
      */
     public static double clamp(double x, double min, double max) {
         if (min > max)

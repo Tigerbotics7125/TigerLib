@@ -23,7 +23,7 @@ allprojects {
 dependencies {
     // check tag above for most recent version
     implementation 'com.github.Tigerbotics7125:tigerlib:VERSION'
-    
+
     // ... other dependencies
 }
 ```

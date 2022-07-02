@@ -66,11 +66,7 @@ public class XboxController extends GenericHID {
     private final EnumMap<XboxButton, JoystickTrigger> mButtons = new EnumMap<>(XboxButton.class);
     private final EnumMap<XboxAxis, JoystickAxisTrigger> mAxes = new EnumMap<>(XboxAxis.class);
 
-    /**
-     * Constructs a new instance of the joystick
-     *
-     * @param port The port on the Driver Station that the joystick is plugged into
-     */
+    /** @param port The port on the Driver Station that the joystick is plugged into */
     public XboxController(int port) {
         super(port);
         pov = new POV(this);
@@ -93,7 +89,7 @@ public class XboxController extends GenericHID {
      * Builds a {@link JoystickAxisTrigger} for this controller from the provided {@link XboxAxis}.
      *
      * @param axis The Axis to build for.
-     * @return The JoystickAxisButton.
+     * @return The JoystickAxisTrigger.
      */
     private JoystickAxisTrigger build(
             XboxAxis axis, double threshold, ThresholdType thresholdType, boolean inverted) {
@@ -120,7 +116,7 @@ public class XboxController extends GenericHID {
         return mButtons.computeIfAbsent(XboxButton.kY, this::build);
     }
 
-    /** @retunr The left bumper's {@link JoystickTrigger}. */
+    /** @return The left bumper's {@link JoystickTrigger}. */
     public JoystickTrigger lb() {
         return mButtons.computeIfAbsent(XboxButton.kLB, this::build);
     }
@@ -172,7 +168,7 @@ public class XboxController extends GenericHID {
                 XboxAxis.kLeftY, (axis) -> build(axis, .98, ThresholdType.kDeadband, false));
     }
 
-    /** Get the left trigger's {@link JoystickAxisTrigger}. */
+    /** @return The left trigger's {@link JoystickAxisTrigger}. */
     public JoystickAxisTrigger lt() {
         return mAxes.computeIfAbsent(
                 XboxAxis.kLT, (axis) -> build(axis, 0.02, ThresholdType.kGreaterThan, false));
