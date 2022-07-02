@@ -1,64 +1,44 @@
-# TigerLib
+<!-- Jitpack, Build workflow, Test workflow -->
+[![](https://jitpack.io/v/Tigerbotics7125/tigerlib.svg)](https://jitpack.io/#Tigerbotics7125/tigerlib) [![Build TigerLib](https://github.com/Tigerbotics7125/TigerLib/actions/workflows/Build.yaml/badge.svg?branch=main)](https://github.com/Tigerbotics7125/TigerLib/actions/workflows/Build.yaml) [![Test TigerLib](https://github.com/Tigerbotics7125/TigerLib/actions/workflows/Test.yaml/badge.svg?branch=main)](https://github.com/Tigerbotics7125/TigerLib/actions/workflows/Test.yaml)
 
-[![GitHub tag (latest SemVer)](https://img.shields.io/github/v/tag/Tigerbotics7125/TigerLib?color=success&label=Latest&style=plastic)](https://github.com/Tigerbotics7125/TigerLib/releases)
-[![GitHub tag (latest SemVer pre-release)](https://img.shields.io/github/v/tag/Tigerbotics7125/TigerLib?color=important&include_prereleases&label=Pre-release&style=plastic)](https://github.com/Tigerbotics7125/TigerLib/releases)
+---
 
+# What is TigerLib?
+TigerLib is a FRC library which holds many different utilities for programming a FRC robot. These utilities include many tools such as OI tools, and Math functions.
+
+# Installation
+
+1. Add the JitPack repository to your `build.gradle` file.
+``` groovy
+allprojects {
+    repositories {
+        maven { url 'https://jitpack.io' }
+    }
+}
+```
+
+1. Add the dependency to your `build.gradle` file.
+> [![](https://jitpack.io/v/Tigerbotics7125/tigerlib.svg)](https://jitpack.io/#Tigerbotics7125/tigerlib)
+```groovy
+dependencies {
+    // check tag above for most recent version
+    implementation 'com.github.Tigerbotics7125:tigerlib:VERSION'
+    
+    // ... other dependencies
+}
+```
+## Contribution
+
+1. [Fork](https://github.com/Tigerbotics7125/TigerLib/fork) this repo.
+1. Make your changes.
+1. [Start](https://github.com/Tigerbotics7125/TigerLib/compare) a pull request.
+
+All changes need to be commited [atomicly](https://www.freshconsulting.com/insights/blog/atomic-commits/) and documented fully.
+
+
+## Acknowledgments
 [![Lines of code](https://img.shields.io/tokei/lines/github/tigerbotics7125/TigerLib?style=plastic)](#)
-
-## Tigerbotic's general library for FRC Robots.
-
-
-[![GitHub issues](https://img.shields.io/github/issues/Tigerbotics7125/TigerLib?style=plastic)](https://github.com/Tigerbotics7125/TigerLib/issues?q=is%3Aissue+is%3Aopen)
-
-[![GitHub closed issues](https://img.shields.io/github/issues-closed-raw/Tigerbotics7125/TigerLib?style=plastic)](https://github.com/Tigerbotics7125/TigerLib/issues?q=is%3Aissue+is%3Aclosed)
-
-[![GitHub pull requests](https://img.shields.io/github/issues-pr/Tigerbotics7125/TigerLib?style=plastic)](https://github.com/Tigerbotics7125/TigerLib/pulls?q=is%3Apr+is%3Aopen)
-
-[![GitHub closed pull requests](https://img.shields.io/github/issues-pr-closed-raw/Tigerbotics7125/TigerLib?style=plastic)](https://github.com/Tigerbotics7125/TigerLib/pulls?q=is%3Apr+is%3Aclosed)
-
-## Installation:
-
-### Optionally: clone the pre-made repo [here](https://github.com/Tigerbotics7125/TigerLibTemplate/).
-
-
-
-1. Initialize a git repo in your project by running `git init` in the root of your FRC project.
-1. Add this project as a git submodule with `git submodule add https://github.com/tigerbotics7125/tigerlib`
-1. Add the following snippet to `settings.gradle`:
-    ```groovy
-    include(":TigerLib")
-
-    rootProject.children.each {
-        setUpChildProject(it)
-    }
-
-    private void setUpChildProject(ProjectDescriptor project) {
-        /*
-        * Instead of every file being named build.gradle.kts we instead use the name ${project.name}.gradle.kts.
-        * This is much nicer for searching for the file in your IDE.
-        */
-        final String groovyName = "${project.name}.gradle"
-        final String kotlinName = "${project.name}.gradle.kts"
-        project.buildFileName = groovyName
-        if (!project.buildFile.isFile()) {
-            project.buildFileName = kotlinName
-        }
-        assert project.buildFile.isFile(): "File named $groovyName or $kotlinName must exist."
-        project.children.each { setUpChildProject(it) }
-    }
-    ```
-1. Add the following snippet to the `dependencies {}` block in `build.gradle`:
-    ```groovy
-    dependencies {
-
-        /* other dependencies */
-
-        implementation project(":TigerLib")
-    }
-    ```
-1. Run `./gradlew build` to build the project, and you should be up and running.
-
-### Contributors & Acknowledgments
-* Spectrum 3847 - base input classes
+* ***In numerical order:***
+* Spectrum 3847 - Some OI concepts.
 
 [![Contributors](https://contrib.rocks/image?repo=Tigerbotics7125/TigerLib)](https://github.com/Tigerbotics7125/TigerLib/graphs/contributors)
