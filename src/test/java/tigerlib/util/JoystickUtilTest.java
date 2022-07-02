@@ -5,10 +5,9 @@
  */
 package tigerlib.util;
 
+import static io.github.tigerbotics7125.tigerlib.util.JoystickUtil.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-
-import static io.github.tigerbotics7125.tigerlib.util.JoystickUtil.*;
 
 import org.junit.jupiter.api.Test;
 

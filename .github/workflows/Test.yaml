@@ -22,6 +22,6 @@ jobs:
 
         - name: Grand execute permission for gradlew
           run: chmod +x gradlew
-        
+
         - name: Test project
           run: ./gradlew test
