@@ -8,7 +8,6 @@ on:
   workflow_dispatch:
 
 jobs:
-  # Build code, ensuring that it doesnt fail (no spotless)
   build:
     runs-on: ubuntu-latest
     permissions:
@@ -28,7 +27,6 @@ jobs:
           chmod +x gradlew
           ./gradlew build -PenforceSpotless=false
 
-  # Deploy javadoc to github pages, only
   deploy-gh-pages:
     runs-on: ubuntu-latest
     needs: build
