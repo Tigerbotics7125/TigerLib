@@ -27,12 +27,12 @@ public class XboxController extends GenericHID {
 
     /* Represents an analog axis on the joystick. */
     public enum XboxAxis {
-        kLeftX(0),
-        kLeftY(1),
-        kLT(2),
-        kRT(3),
-        kRightX(4),
-        kRightY(5);
+        LEFT_X(0),
+        LEFT_Y(1),
+        LT(2),
+        RT(3),
+        RIGHT_X(4),
+        RIGHT_Y(5);
 
         public final int value;
 
@@ -43,16 +43,16 @@ public class XboxController extends GenericHID {
 
     /* Represents a digital button on the joystick. */
     public enum XboxButton {
-        kA(1),
-        kB(2),
-        kX(3),
-        kY(4),
-        kLB(5),
-        kRB(6),
-        kBack(7),
-        kStart(8),
-        kLStick(9),
-        kRStick(10);
+        A(1),
+        B(2),
+        X(3),
+        Y(4),
+        LB(5),
+        RB(6),
+        BACK(7),
+        START(8),
+        LEFT_STICK(9),
+        RIGHT_STICK(10);
 
         public final int value;
 
@@ -98,52 +98,52 @@ public class XboxController extends GenericHID {
 
     /** @return The a {@link JoystickTrigger}. */
     public JoystickTrigger a() {
-        return mButtons.computeIfAbsent(XboxButton.kA, this::build);
+        return mButtons.computeIfAbsent(XboxButton.A, this::build);
     }
 
     /** @return The b {@link JoystickTrigger}. */
     public JoystickTrigger b() {
-        return mButtons.computeIfAbsent(XboxButton.kB, this::build);
+        return mButtons.computeIfAbsent(XboxButton.B, this::build);
     }
 
     /** @return The x {@link JoystickTrigger}. */
     public JoystickTrigger x() {
-        return mButtons.computeIfAbsent(XboxButton.kX, this::build);
+        return mButtons.computeIfAbsent(XboxButton.X, this::build);
     }
 
     /** @return The y {@link JoystickTrigger}. */
     public JoystickTrigger y() {
-        return mButtons.computeIfAbsent(XboxButton.kY, this::build);
+        return mButtons.computeIfAbsent(XboxButton.Y, this::build);
     }
 
     /** @return The left bumper's {@link JoystickTrigger}. */
     public JoystickTrigger lb() {
-        return mButtons.computeIfAbsent(XboxButton.kLB, this::build);
+        return mButtons.computeIfAbsent(XboxButton.LB, this::build);
     }
 
     /** @return The right bumper's {@link JoystickTrigger}. */
     public JoystickTrigger rb() {
-        return mButtons.computeIfAbsent(XboxButton.kRB, this::build);
+        return mButtons.computeIfAbsent(XboxButton.RB, this::build);
     }
 
     /** @return The back {@link JoystickTrigger}. */
     public JoystickTrigger back() {
-        return mButtons.computeIfAbsent(XboxButton.kBack, this::build);
+        return mButtons.computeIfAbsent(XboxButton.BACK, this::build);
     }
 
     /** @return The start {@link JoystickTrigger}. */
     public JoystickTrigger start() {
-        return mButtons.computeIfAbsent(XboxButton.kStart, this::build);
+        return mButtons.computeIfAbsent(XboxButton.START, this::build);
     }
 
     /** @return The left stick's {@link JoystickTrigger} */
     public JoystickTrigger lStick() {
-        return mButtons.computeIfAbsent(XboxButton.kLStick, this::build);
+        return mButtons.computeIfAbsent(XboxButton.LEFT_STICK, this::build);
     }
 
     /** @return The right stick's {@link JoystickTrigger}. */
     public JoystickTrigger rStick() {
-        return mButtons.computeIfAbsent(XboxButton.kRStick, this::build);
+        return mButtons.computeIfAbsent(XboxButton.RIGHT_STICK, this::build);
     }
 
     /**
@@ -155,7 +155,7 @@ public class XboxController extends GenericHID {
      */
     public JoystickAxisTrigger leftX() {
         return mAxes.computeIfAbsent(
-                XboxAxis.kLeftX, (axis) -> build(axis, .98, ThresholdType.kDeadband, true));
+                XboxAxis.LEFT_X, (axis) -> build(axis, .98, ThresholdType.Deadband, true));
     }
 
     /**
@@ -165,19 +165,19 @@ public class XboxController extends GenericHID {
      */
     public JoystickAxisTrigger leftY() {
         return mAxes.computeIfAbsent(
-                XboxAxis.kLeftY, (axis) -> build(axis, .98, ThresholdType.kDeadband, false));
+                XboxAxis.LEFT_Y, (axis) -> build(axis, .98, ThresholdType.Deadband, false));
     }
 
     /** @return The left trigger's {@link JoystickAxisTrigger}. */
     public JoystickAxisTrigger lt() {
         return mAxes.computeIfAbsent(
-                XboxAxis.kLT, (axis) -> build(axis, 0.02, ThresholdType.kGreaterThan, false));
+                XboxAxis.LT, (axis) -> build(axis, 0.02, ThresholdType.GreaterThan, false));
     }
 
     /** @return The right trigger's {@link JoystickAxisTrigger}. */
     public JoystickAxisTrigger rt() {
         return mAxes.computeIfAbsent(
-                XboxAxis.kRT, (axis) -> build(axis, 0.02, ThresholdType.kGreaterThan, false));
+                XboxAxis.RT, (axis) -> build(axis, 0.02, ThresholdType.GreaterThan, false));
     }
 
     /**
@@ -189,7 +189,7 @@ public class XboxController extends GenericHID {
      */
     public JoystickAxisTrigger rightX() {
         return mAxes.computeIfAbsent(
-                XboxAxis.kRightX, (axis) -> build(axis, .98, ThresholdType.kDeadband, true));
+                XboxAxis.RIGHT_X, (axis) -> build(axis, .98, ThresholdType.Deadband, true));
     }
 
     /**
@@ -199,6 +199,6 @@ public class XboxController extends GenericHID {
      */
     public JoystickAxisTrigger rightY() {
         return mAxes.computeIfAbsent(
-                XboxAxis.kRightY, (axis) -> build(axis, .98, ThresholdType.kDeadband, false));
+                XboxAxis.RIGHT_Y, (axis) -> build(axis, .98, ThresholdType.Deadband, false));
     }
 }

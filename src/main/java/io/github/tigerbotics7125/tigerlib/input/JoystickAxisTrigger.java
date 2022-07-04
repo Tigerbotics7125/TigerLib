@@ -20,35 +20,35 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 public class JoystickAxisTrigger extends Trigger {
     private final GenericHID mJoystick;
     private final int mAxis;
-    private boolean mInverted = false;
-    private double mThreshold = 0.0;
-    private ThresholdType mThresholdType = ThresholdType.kExact;
+    private final boolean mInverted;
+    private final double mThreshold;
+    private final ThresholdType mThresholdType;
 
-    public static enum ThresholdType {
+    public enum ThresholdType {
         /**
          * Considers the input active if;
          *
          * <p>The input equals the threshold.
          */
-        kExact,
+        Exact,
         /**
          * Considers the input active if:
          *
          * <p>The input is less than the threshold.
          */
-        kLessThan,
+        LessThan,
         /**
          * Considers the input active if:
          *
          * <p>The input is greater than the threshold.
          */
-        kGreaterThan,
+        GreaterThan,
         /**
          * Considers the input active if:
          *
          * <p>The aboslute value of the input is greater than the threshold.
          */
-        kDeadband;
+        Deadband;
     }
 
     /**
@@ -100,13 +100,13 @@ public class JoystickAxisTrigger extends Trigger {
     @Override
     public boolean getAsBoolean() {
         switch (this.mThresholdType) {
-            case kExact:
+            case Exact:
                 return getValue() == mThreshold;
-            case kLessThan:
+            case LessThan:
                 return getValue() < mThreshold;
-            case kGreaterThan:
+            case GreaterThan:
                 return getValue() > mThreshold;
-            case kDeadband:
+            case Deadband:
                 return Math.abs(getValue()) > mThreshold;
             default:
                 return false;

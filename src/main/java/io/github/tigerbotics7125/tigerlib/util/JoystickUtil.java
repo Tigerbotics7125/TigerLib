@@ -35,7 +35,7 @@ public class JoystickUtil {
     /**
      * Deadzone inputs.
      *
-     * <p>Visualization https://www.desmos.com/calculator/enoyillzg6
+     * <p>Visualization <a href="https://www.desmos.com/calculator/enoyillzg6">...</a>
      *
      * @param input Pair of inputs, to deadzone.
      * @param deadzone how much to deadzone.

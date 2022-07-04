@@ -24,10 +24,10 @@ public class GExtreme3DPro extends GenericHID {
 
     /** Represents an analog axis on the joystick */
     public enum Axis {
-        kX(0),
-        kY(1),
-        kZ(2),
-        kThrottle(3);
+        X(0),
+        Y(1),
+        Z(2),
+        Throttle(3);
 
         public final int value;
 
@@ -38,18 +38,18 @@ public class GExtreme3DPro extends GenericHID {
 
     /** Represents a digital button on the joystick */
     public enum Button {
-        kTrigger(1),
-        kThumb(2),
-        k3(3),
-        k4(4),
-        k5(5),
-        k6(6),
-        k7(7),
-        k8(8),
-        k9(9),
-        k10(10),
-        k11(11),
-        k12(12);
+        TRIGGER(1),
+        THUMB(2),
+        THREE(3),
+        FOUR(4),
+        FIVE(5),
+        SIX(6),
+        SEVEN(7),
+        EIGHT(8),
+        NINE(9),
+        TEN(10),
+        ELEVEN(11),
+        TWELVE(12);
 
         public final int value;
 
@@ -95,85 +95,85 @@ public class GExtreme3DPro extends GenericHID {
 
     /** @return The trigger's {@link JoystickTrigger}. */
     public JoystickTrigger trigger() {
-        return mButtons.computeIfAbsent(Button.kTrigger, this::build);
+        return mButtons.computeIfAbsent(Button.TRIGGER, this::build);
     }
 
     /** @return The thumb's {@link JoystickTrigger}. */
     public JoystickTrigger thumb() {
-        return mButtons.computeIfAbsent(Button.kThumb, this::build);
+        return mButtons.computeIfAbsent(Button.THUMB, this::build);
     }
 
     /** @return The 3 button's {@link JoystickTrigger}. */
     public JoystickTrigger three() {
-        return mButtons.computeIfAbsent(Button.k3, this::build);
+        return mButtons.computeIfAbsent(Button.THREE, this::build);
     }
 
     /** @return The 4 button's {@link JoystickTrigger}. */
     public JoystickTrigger four() {
-        return mButtons.computeIfAbsent(Button.k4, this::build);
+        return mButtons.computeIfAbsent(Button.FOUR, this::build);
     }
 
     /** @return The 5 button's {@link JoystickTrigger}. */
     public JoystickTrigger five() {
-        return mButtons.computeIfAbsent(Button.k5, this::build);
+        return mButtons.computeIfAbsent(Button.FIVE, this::build);
     }
 
     /** @return The 6 button's {@link JoystickTrigger}. */
     public JoystickTrigger six() {
-        return mButtons.computeIfAbsent(Button.k6, this::build);
+        return mButtons.computeIfAbsent(Button.SIX, this::build);
     }
 
     /** @return The 7 button's {@link JoystickTrigger}. */
     public JoystickTrigger seven() {
-        return mButtons.computeIfAbsent(Button.k7, this::build);
+        return mButtons.computeIfAbsent(Button.SEVEN, this::build);
     }
 
     /** @return The 8 button's {@link JoystickTrigger}. */
     public JoystickTrigger eight() {
-        return mButtons.computeIfAbsent(Button.k8, this::build);
+        return mButtons.computeIfAbsent(Button.EIGHT, this::build);
     }
 
     /** @return The 9 button's {@link JoystickTrigger}. */
     public JoystickTrigger nine() {
-        return mButtons.computeIfAbsent(Button.k9, this::build);
+        return mButtons.computeIfAbsent(Button.NINE, this::build);
     }
 
     /** @return The 10 button's {@link JoystickTrigger}. */
     public JoystickTrigger ten() {
-        return mButtons.computeIfAbsent(Button.k10, this::build);
+        return mButtons.computeIfAbsent(Button.TEN, this::build);
     }
 
     /** @return The 11 button's {@link JoystickTrigger}. */
     public JoystickTrigger eleven() {
-        return mButtons.computeIfAbsent(Button.k11, this::build);
+        return mButtons.computeIfAbsent(Button.ELEVEN, this::build);
     }
 
     /** @return The 12 button's {@link JoystickTrigger}. */
     public JoystickTrigger twelve() {
-        return mButtons.computeIfAbsent(Button.k12, this::build);
+        return mButtons.computeIfAbsent(Button.TWELVE, this::build);
     }
 
     /** @return The x axis' {@link JoystickAxisTrigger}. */
     public JoystickAxisTrigger x() {
         return mAxes.computeIfAbsent(
-                Axis.kX, (axis) -> build(axis, .98, ThresholdType.kDeadband, false));
+                Axis.X, (axis) -> build(axis, .98, ThresholdType.Deadband, false));
     }
 
     /** @return The y axis' {@link JoystickAxisTrigger} */
     public JoystickAxisTrigger y() {
         return mAxes.computeIfAbsent(
-                Axis.kY, (axis) -> build(axis, .98, ThresholdType.kDeadband, false));
+                Axis.Y, (axis) -> build(axis, .98, ThresholdType.Deadband, false));
     }
 
     /** @return The z axis' {@link JoystickAxisTrigger} */
     public JoystickAxisTrigger z() {
         return mAxes.computeIfAbsent(
-                Axis.kZ, (axis) -> build(axis, .98, ThresholdType.kDeadband, false));
+                Axis.Z, (axis) -> build(axis, .98, ThresholdType.Deadband, false));
     }
 
     /** @return The throttle axis' {@link JoystickAxisTrigger} */
     public JoystickAxisTrigger throttle() {
         return mAxes.computeIfAbsent(
-                Axis.kThrottle, (axis) -> build(axis, .98, ThresholdType.kDeadband, false));
+                Axis.Throttle, (axis) -> build(axis, .98, ThresholdType.Deadband, false));
     }
 }
