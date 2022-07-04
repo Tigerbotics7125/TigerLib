@@ -15,5 +15,5 @@ import java.util.function.Supplier;
 @FunctionalInterface
 public interface CleanSupplier<T> extends Supplier<T> {
 
-    public abstract T get();
+    T get();
 }
