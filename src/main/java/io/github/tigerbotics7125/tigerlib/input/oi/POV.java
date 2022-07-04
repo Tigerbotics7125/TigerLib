@@ -14,15 +14,15 @@ import java.util.EnumMap;
 public class POV {
 
     private enum POVAngle {
-        kCenter(-1),
-        kUp(0),
-        kUpRight(45),
-        kRight(90),
-        kDownRight(135),
-        kDown(180),
-        kDownLeft(225),
-        kLeft(270),
-        kUpLeft(315);
+        CENTER(-1),
+        UP(0),
+        UP_RIGHT(45),
+        RIGHT(90),
+        DOWN_RIGHT(135),
+        DOWN(180),
+        DOWN_LEFT(225),
+        LEFT(270),
+        UP_LEFT(315);
 
         public final int value;
 
@@ -61,46 +61,46 @@ public class POV {
 
     /** @return The centered (not pressed) {@link JoystickPOVTrigger}. */
     public JoystickPOVTrigger center() {
-        return mPovs.computeIfAbsent(POVAngle.kCenter, this::build);
+        return mPovs.computeIfAbsent(POVAngle.CENTER, this::build);
     }
 
     /** @return The upper (0 degrees) {@link JoystickPOVTrigger}. */
     public JoystickPOVTrigger up() {
-        return mPovs.computeIfAbsent(POVAngle.kUp, this::build);
+        return mPovs.computeIfAbsent(POVAngle.UP, this::build);
     }
 
     /** @return The upper right (45 degrees) {@link JoystickPOVTrigger}. */
     public JoystickPOVTrigger upRight() {
-        return mPovs.computeIfAbsent(POVAngle.kUpRight, this::build);
+        return mPovs.computeIfAbsent(POVAngle.UP_RIGHT, this::build);
     }
 
     /** @return The right (90 degrees) {@link JoystickPOVTrigger}. */
     public JoystickPOVTrigger right() {
-        return mPovs.computeIfAbsent(POVAngle.kRight, this::build);
+        return mPovs.computeIfAbsent(POVAngle.RIGHT, this::build);
     }
 
     /** @return The lower right (135 degrees) {@link JoystickPOVTrigger}. */
     public JoystickPOVTrigger downRight() {
-        return mPovs.computeIfAbsent(POVAngle.kDownRight, this::build);
+        return mPovs.computeIfAbsent(POVAngle.DOWN_RIGHT, this::build);
     }
 
     /** @return The lower (180 degrees) {@link JoystickPOVTrigger}. */
     public JoystickPOVTrigger down() {
-        return mPovs.computeIfAbsent(POVAngle.kDown, this::build);
+        return mPovs.computeIfAbsent(POVAngle.DOWN, this::build);
     }
 
     /** @return The lower left (225 degrees) {@link JoystickPOVTrigger}. */
     public JoystickPOVTrigger downLeft() {
-        return mPovs.computeIfAbsent(POVAngle.kDownLeft, this::build);
+        return mPovs.computeIfAbsent(POVAngle.DOWN_LEFT, this::build);
     }
 
     /** @return The left (270 degrees) {@link JoystickPOVTrigger}. */
     public JoystickPOVTrigger left() {
-        return mPovs.computeIfAbsent(POVAngle.kLeft, this::build);
+        return mPovs.computeIfAbsent(POVAngle.LEFT, this::build);
     }
 
     /** @return The upper left (315 degrees) {@link JoystickPOVTrigger}. */
     public JoystickPOVTrigger upLeft() {
-        return mPovs.computeIfAbsent(POVAngle.kUpLeft, this::build);
+        return mPovs.computeIfAbsent(POVAngle.UP_LEFT, this::build);
     }
 }

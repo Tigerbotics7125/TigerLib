@@ -11,3 +11,6 @@
 .gradle
 build
 bin
+
+# Intellij
+.idea
