@@ -36,7 +36,7 @@ spotless {
   var enforceSpotless = project.properties["enforceSpotless"]
   // set enforceCheck by converting string to boolean
   // defaults to true if not set
-  enforceCheck = enforceSpotless == "false" ? false : true
+  enforceCheck = enforceSpotless != "false"
   java {
     target fileTree('.') {
       include '**/*.java'
