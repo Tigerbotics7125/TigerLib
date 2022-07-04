@@ -6,7 +6,8 @@ on:
       - main
   pull_request:
     types:
-      - created
+      - opened
+      - reopened
   workflow_dispatch:
 
 jobs:
