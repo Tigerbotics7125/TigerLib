@@ -5,7 +5,6 @@
  */
 package io.github.tigerbotics7125.tigerlib.input;
 
-import io.github.tigerbotics7125.tigerlib.util.CleanSupplier;
 import io.github.tigerbotics7125.tigerlib.util.JoystickUtil;
 
 import edu.wpi.first.wpilibj.GenericHID;
@@ -87,13 +86,11 @@ public class JoystickAxisTrigger extends Trigger {
         return getRawValue() * (mInverted ? -1 : 1);
     }
 
-    public CleanSupplier<Double> getCleanValue() {
-        return () -> {
+    public double getCleanValue() {
             double value = getValue();
             value = JoystickUtil.deadband(value, .075);
             value = JoystickUtil.clamp(value, -1, 1);
             return value;
-        };
     }
 
     /** @return Whether the axis is determined as active or not. */

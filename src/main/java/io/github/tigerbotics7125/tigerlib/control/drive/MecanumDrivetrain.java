@@ -5,7 +5,7 @@
  */
 package io.github.tigerbotics7125.tigerlib.control.drive;
 
-import io.github.tigerbotics7125.tigerlib.util.CleanSupplier;
+import java.util.function.DoubleSupplier;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -65,10 +65,10 @@ public class MecanumDrivetrain {
      * @param zSpeed Robot z (rotate) speed [-1.1].
      */
     public void drive(
-            CleanSupplier<Double> xSpeed,
-            CleanSupplier<Double> ySpeed,
-            CleanSupplier<Double> zSpeed) {
-        drive(xSpeed.get(), ySpeed.get(), zSpeed.get());
+            DoubleSupplier xSpeed,
+            DoubleSupplier ySpeed,
+            DoubleSupplier zSpeed) {
+        drive(xSpeed.getAsDouble(), ySpeed.getAsDouble(), zSpeed.getAsDouble());
     }
 
     /**
