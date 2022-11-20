@@ -87,10 +87,10 @@ public class JoystickAxisTrigger extends Trigger {
     }
 
     public double getCleanValue() {
-            double value = getValue();
-            value = JoystickUtil.deadband(value, .075);
-            value = JoystickUtil.clamp(value, -1, 1);
-            return value;
+        double value = getValue();
+        value = JoystickUtil.deadband(value, .075);
+        value = JoystickUtil.clamp(value, -1, 1);
+        return value;
     }
 
     /** @return Whether the axis is determined as active or not. */
