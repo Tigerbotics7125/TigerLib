@@ -5,13 +5,13 @@
  */
 package io.github.tigerbotics7125.tigerlib.control.drive;
 
-import io.github.tigerbotics7125.tigerlib.util.CleanSupplier;
-
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.drive.MecanumDrive;
 import edu.wpi.first.wpilibj.interfaces.Gyro;
 import edu.wpi.first.wpilibj.motorcontrol.MotorController;
+
+import java.util.function.DoubleSupplier;
 
 /**
  * Basic control class for a mecanum drivetrain.
@@ -64,11 +64,8 @@ public class MecanumDrivetrain {
      * @param ySpeed Robot y (strafe) speed [-1,1].
      * @param zSpeed Robot z (rotate) speed [-1.1].
      */
-    public void drive(
-            CleanSupplier<Double> xSpeed,
-            CleanSupplier<Double> ySpeed,
-            CleanSupplier<Double> zSpeed) {
-        drive(xSpeed.get(), ySpeed.get(), zSpeed.get());
+    public void drive(DoubleSupplier xSpeed, DoubleSupplier ySpeed, DoubleSupplier zSpeed) {
+        drive(xSpeed.getAsDouble(), ySpeed.getAsDouble(), zSpeed.getAsDouble());
     }
 
     /**
