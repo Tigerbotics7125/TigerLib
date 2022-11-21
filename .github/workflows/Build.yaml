@@ -44,7 +44,7 @@ jobs:
       - name: Build
         run: |
           chmod +x gradlew
-          ./gradlew build
+          ./gradlew build -PenforceSpotless=false
 
   test:
     runs-on: ubuntu-latest
@@ -63,4 +63,4 @@ jobs:
       - name: Test
         run: |
           chmod +x gradlew
-          ./gradlew test
+          ./gradlew test -PenforceSpotless=false
