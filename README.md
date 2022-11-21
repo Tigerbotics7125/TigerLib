@@ -28,10 +28,15 @@ dependencies {
 }
 ```
 
-# Usage
+# Support
 
-All fully released code should be fully documented, so javadocs (available [here](tigerbotics7125.github.io/TigerLib/)) are your best bet. 
-If you have any questions outside of that please create an issue [here](https://github.com/Tigerbotics7125/TigerLib/issues/new).
+Code documentation and usage examples are available below:
+
+* [Javadocs](https://tigerbotics7125.github.io/TigerLib/)
+* [Wiki](https://github.com/Tigerbotics7125/TigerLib/wiki)
+
+If you still need help, create an issue [here](https://github.com/Tigerbotics7125/TigerLib/issues/new).
+
 ## Contribution
 
 1. [Fork](https://github.com/Tigerbotics7125/TigerLib/fork) this repo.
