@@ -83,11 +83,11 @@ public class TriggerTest {
     @Test
     public void activationTest() {
         b = false;
-        Trigger low = new Trigger(bool, WHILE_LOW);
-        Trigger high = new Trigger(bool, WHILE_HIGH);
-        Trigger fall = new Trigger(bool, ON_FALLING);
-        Trigger rise = new Trigger(bool, ON_RISING);
-        Trigger tran = new Trigger(bool, ON_TRANSITION);
+        Trigger low = new Trigger(bool).activate(WHILE_LOW);
+        Trigger high = new Trigger(bool).activate(WHILE_HIGH);
+        Trigger fall = new Trigger(bool).activate(ON_FALLING);
+        Trigger rise = new Trigger(bool).activate(ON_RISING);
+        Trigger tran = new Trigger(bool).activate(ON_TRANSITION);
 
         assertTrue(low.get());
         assertFalse(high.get());
@@ -137,29 +137,34 @@ public class TriggerTest {
         assertFalse(t2.not().get());
     }
 
-    /*
-     * Should probably write a test to combine changing values and composition
-     * but I'm lazy and I don't even know what to test, I guess just one of every combination; but thats alot.
-     */
-
+    /** This is also the TriggerGroup test. */
     @Test
-    public void triggerGroupTest() {
+    public void cancelCommandOnDisable() {
         b = true;
         Trigger t = new Trigger(bool);
+        TriggerGroup tg = new TriggerGroup();
         Command c = new RunCommand(() -> {});
 
-        t.trigger(c);
+        t.trigger(c).join(tg);
+        TigerLib.periodic();
+
+        assertTrue(c.isScheduled());
+
+        // disabled commands should immediately cancel any commands they are triggering.
+        t.disable();
+        assertFalse(c.isScheduled());
+
+        // re enable
+        t.enable();
         TigerLib.periodic();
         assertTrue(c.isScheduled());
 
-        Command c2 = new RunCommand(() -> {}).perpetually();
-        t.trigger(c2, "Group2");
+        // disabled trigger groups should disable all triggers, consequentially caneling commands.
+        tg.disable();
+        assertFalse(c.isScheduled());
 
-        assertFalse(c2.isScheduled());
-
-        Trigger.enableGroup("Group2");
+        tg.enable();
         TigerLib.periodic();
-
-        assertTrue(c2.isScheduled());
+        assertTrue(c.isScheduled());
     }
 }
