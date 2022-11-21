@@ -2,7 +2,6 @@ name: Build
 
 on:
   pull_request:
-    types: [created, synchronize, reopened]
   workflow_dispatch:
 
 jobs:
