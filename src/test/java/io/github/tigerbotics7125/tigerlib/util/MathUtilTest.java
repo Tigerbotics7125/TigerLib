@@ -3,12 +3,10 @@
  * This work is licensed under the terms of the GNU GPLv3 license
  * found in the root directory of this project.
  */
-package tigerlib.util;
+package io.github.tigerbotics7125.tigerlib.util;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-
-import io.github.tigerbotics7125.tigerlib.util.MathUtil;
 
 import org.junit.jupiter.api.Test;
 
