@@ -41,7 +41,7 @@ jobs:
           java-version: '11'
           distribution: 'adopt'
 
-      - name: Spotless
+      - name: Build
         run: |
           chmod +x gradlew
           ./gradlew build
@@ -60,7 +60,7 @@ jobs:
           java-version: '11'
           distribution: 'adopt'
 
-      - name: Test project
+      - name: Test
         run: |
           chmod +x gradlew
           ./gradlew test
