@@ -1,13 +1,9 @@
 plugins {
   id "java"
-
   id "maven-publish"
-
   id "edu.wpi.first.GradleRIO" version "2022.4.1"
   id "com.diffplug.spotless" version "6.1.0"
 }
-
-group = 'io.github.tigerbotics7125'
 
 sourceCompatibility = JavaVersion.VERSION_11
 targetCompatibility = JavaVersion.VERSION_11
@@ -19,6 +15,8 @@ dependencies {
   testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
   testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
 }
+
+group = 'io.github.tigerbotics7125'
 
 publishing {
   publications {
