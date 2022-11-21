@@ -2,9 +2,15 @@ name: Build
 
 on:
   push:
-    branches-ignore:
+    branches:
       - main
+    paths:
+      - '**.java'
+      - '**.gradle'
   pull_request:
+      - created
+      - synchronize
+      - reopened
   workflow_dispatch:
 
 jobs:
