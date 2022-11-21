@@ -50,9 +50,19 @@ spotless {
     importOrder('\\#', 'io.github.tigerbotics7125.tigerLib', 'io.github.tigerbotics7125', 'edu.wpi', '')
     removeUnusedImports()
   }
+    groovyGradle {
+        target fileTree('.') {
+            include '**/*.gradle'
+            exclude '**/build/**', '**/build-*/**'
+        }
+        greclipse()
+        indentWithSpaces(4)
+        trimTrailingWhitespace()
+        endWithNewline()
+    }
   format 'misc', {
     target fileTree('.') {
-      include '**/*.gradle', '**/*.md', '**/.gitignore', '**/*.yaml', '**/*.yml'
+            include '**/*.md', '**/.gitignore', '**/*.yaml', '**/*.yml'
       exclude '**/build/**', '**/build-*/**'
     }
     trimTrailingWhitespace()
