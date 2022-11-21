@@ -8,25 +8,35 @@ plugins {
 sourceCompatibility = JavaVersion.VERSION_11
 targetCompatibility = JavaVersion.VERSION_11
 
-dependencies {
-  implementation wpi.java.deps.wpilib()
-  implementation wpi.java.vendor.java()
+wpi.java.debugJni = false;
 
-  testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
-  testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
+dependencies {
+    implementation wpi.java.deps.wpilib()
+    implementation wpi.java.vendor.java()
+
+    nativeDebug wpi.java.deps.wpilibJniDebug(wpi.platforms.desktop)
+    nativeDebug wpi.java.vendor.jniDebug(wpi.platforms.desktop)
+    simulationDebug wpi.sim.enableDebug()
+
+    nativeRelease wpi.java.deps.wpilibJniRelease(wpi.platforms.desktop)
+    nativeRelease wpi.java.vendor.jniRelease(wpi.platforms.desktop)
+    simulationRelease wpi.sim.enableRelease()
+
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
 }
 
 group = 'io.github.tigerbotics7125'
 
 publishing {
-  publications {
-    maven(MavenPublication) {
-      groupId = "${groupId}"
-      artifactId = "tigerlib"
-      version = project.properties["version"]
-      from components.java
+    publications {
+        maven(MavenPublication) {
+            groupId = "${groupId}"
+            artifactId = "tigerlib"
+            version = project.properties["version"]
+            from components.java
+        }
     }
-  }
 }
 
 wpi.java.configureTestTasks(test)
@@ -36,26 +46,26 @@ test {
 }
 
 spotless {
-  // get enforce property
-  var enforceSpotless = project.properties["enforceSpotless"]
-  // set enforceCheck by converting string to boolean
-  // defaults to true if not set
-  enforceCheck = enforceSpotless != "false"
-  java {
-    target fileTree('.') {
-      include '**/*.java'
-      exclude '**/build/**', '**/build-*/**'
+    // get enforce property
+    var enforceSpotless = project.properties["enforceSpotless"]
+    // set enforceCheck by converting string to boolean
+    // defaults to true if not set
+    enforceCheck = enforceSpotless != "false"
+    java {
+        target fileTree('.') {
+            include '**/*.java'
+            exclude '**/build/**', '**/build-*/**'
+        }
+        licenseHeaderFile 'LICENSE_SHORTHAND'
+
+        googleJavaFormat('1.8').aosp().reflowLongStrings()
+
+        trimTrailingWhitespace()
+        endWithNewline()
+
+        importOrder('\\#', 'io.github.tigerbotics7125.tigerLib', 'io.github.tigerbotics7125', 'edu.wpi', '')
+        removeUnusedImports()
     }
-    licenseHeaderFile 'LICENSE_SHORTHAND'
-
-    googleJavaFormat('1.8').aosp().reflowLongStrings()
-
-    trimTrailingWhitespace()
-    endWithNewline()
-
-    importOrder('\\#', 'io.github.tigerbotics7125.tigerLib', 'io.github.tigerbotics7125', 'edu.wpi', '')
-    removeUnusedImports()
-  }
     groovyGradle {
         target fileTree('.') {
             include '**/*.gradle'
@@ -66,15 +76,15 @@ spotless {
         trimTrailingWhitespace()
         endWithNewline()
     }
-  format 'misc', {
-    target fileTree('.') {
+    format 'misc', {
+        target fileTree('.') {
             include '**/*.md', '**/.gitignore', '**/*.yaml', '**/*.yml'
-      exclude '**/build/**', '**/build-*/**'
+            exclude '**/build/**', '**/build-*/**'
+        }
+        trimTrailingWhitespace()
+        indentWithSpaces(2)
+        endWithNewline()
     }
-    trimTrailingWhitespace()
-    indentWithSpaces(2)
-    endWithNewline()
-  }
 }
 
 // gradle test logging
