@@ -7,42 +7,37 @@ package io.github.tigerbotics7125.tigerlib.input;
 
 import io.github.tigerbotics7125.tigerlib.TigerLib;
 
+import edu.wpi.first.util.sendable.Sendable;
+import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.function.BooleanSupplier;
 
 /**
  * This class provides a way to track a boolean compared to time as a circuit would.
  *
- * <p>This class is meant to be a replacement for WPILib's version; however this class goes in a
- * different direction then WPILib; so to fully utilize the class will take extra work on the users
- * part.
+ * <p>This class is meant to be a replacement for WPILib's version. Anything that uses a WPILib
+ * Trigger can easily be converted to work with this class.
  *
- * <p>The {@link io.github.tigerbotics7125.tigerlib.input.oi.OI} class is the intended use case for
- * this class, mapping button or other inputs to command execution.
- *
- * <p>The user must put {@code new TigerLib(this);} in their main {@code TimedRobot} class.
+ * <p>The user must either run {@link TigerLib#periodic()} (ideally) or {@link Trigger#periodic()}
+ * (less idealy) in their robot's periodic function for full functionality.
  *
  * @author Jeffrey Morris | 7125 Tigerbotics
- * @implNote TODO: Move Trigger groups to an interal class.
  */
-public class Trigger implements BooleanSupplier {
-    public static final String kDefaultGroup = "DEFAULT";
+public class Trigger implements BooleanSupplier, Sendable {
 
-    private static Set<Trigger> mTriggers = new HashSet<>();
-    private static Set<String> mActiveGroups = new HashSet<>();
-    private static Set<String> mInactiveGroups = new HashSet<>();
-
-    static {
-        enableGroup(kDefaultGroup);
-    }
+    // The List of Triggers created, used to iterate and check values periodically.
+    private static List<Trigger> mTriggers = new LinkedList<>();
 
     /**
-     * Static call to update all {@link Trigger} Objects. Should only be called by {@link TigerLib},
-     * not by the user.
+     * Static call to update all {@link Trigger} Objects.
+     *
+     * <p>The user should either call this function or {@link TigerLib#periodic()} in their robot's
+     * periodic function.
      */
     public static void periodic() {
         // update last state so that transition conditions work properly.
@@ -50,59 +45,7 @@ public class Trigger implements BooleanSupplier {
     }
 
     /**
-     * Enable a Trigger group.
-     *
-     * @param group The group to enable.
-     */
-    public static void enableGroup(String group) {
-        mActiveGroups.add(group);
-        mInactiveGroups.remove(group);
-    }
-
-    /**
-     * Enable a list of Trigger groups.
-     *
-     * @param groups The groups to enable.
-     */
-    public static void enableGroups(String... groups) {
-        for (String g : groups) {
-            Trigger.enableGroup(g);
-        }
-    }
-
-    /**
-     * Disable a Trigger group.
-     *
-     * @param group The group to disable.
-     */
-    public static void disableGroup(String group) {
-        mInactiveGroups.add(group);
-        mActiveGroups.remove(group);
-    }
-
-    /**
-     * Disable a list of Trigger groups.
-     *
-     * @param groups The groups to disable.
-     */
-    public static void disableGroups(String... groups) {
-        for (String g : groups) {
-            Trigger.disableGroup(g);
-        }
-    }
-
-    /**
-     * Check if the Trigger group is enabled.
-     *
-     * @param group The group to check.
-     * @return If the group is currently enabled.
-     */
-    public static boolean isGroupEnabled(String group) {
-        return mActiveGroups.contains(group);
-    }
-
-    /**
-     * Activation conditions for a Trigger.
+     * Activation conditions for a {@link Trigger}.
      *
      * <p>These values are representative of different ways a circuit could change its state.
      */
@@ -117,24 +60,29 @@ public class Trigger implements BooleanSupplier {
 
     private final BooleanSupplier mInput;
     private final ActivationCondition mActivation;
-    private boolean mDisabled;
+    private final List<Command> mCommands;
+    private boolean mEnabled;
     public boolean mLastState;
 
     /**
-     * Create a Trigger object.
+     * Create a new {@link Trigger} Object.
+     *
+     * <p>NOTE: This Constructor is <b>private</b> to simplify user code.
      *
      * @param input The boolean input.
-     * @param activation The activation condition to control the trigger.
+     * @param activateOn The {@link ActivationCondition} to follow.
      */
-    public Trigger(BooleanSupplier input, ActivationCondition activation) {
+    private Trigger(BooleanSupplier input, ActivationCondition activateOn) {
         mInput = input;
-        mActivation = activation;
+        mActivation = activateOn;
+        mCommands = new ArrayList<>();
+        mEnabled = true;
         mLastState = mInput.getAsBoolean();
         mTriggers.add(this);
     }
 
     /**
-     * Equivalent to calling {@code new Trigger(input, ActivationCondition.WHILE_HELD)}
+     * Create a new {@link Trigger} object.
      *
      * @param input The boolean input.
      */
@@ -142,12 +90,12 @@ public class Trigger implements BooleanSupplier {
         this(input, ActivationCondition.WHILE_HIGH);
     }
 
-    /** @return The input to this Trigger. */
+    /** @return The input to this {@link Trigger}. */
     public boolean getAsBoolean() {
         return mInput.getAsBoolean();
     }
 
-    /** @return The state of this Trigger. */
+    /** @return The state of this {@link Trigger}. */
     public boolean get() {
         boolean state = getAsBoolean();
         switch (mActivation) {
@@ -166,51 +114,74 @@ public class Trigger implements BooleanSupplier {
         return false;
     }
 
-    public Trigger trigger(Command cmd, String group) {
+    public Trigger join(TriggerGroup triggerGroup) {
+        triggerGroup.enroll(this);
+        return this;
+    }
+
+    public Trigger leave(TriggerGroup triggerGroup) {
+        triggerGroup.dismiss(this);
+        return this;
+    }
+
+    /**
+     * Execute the given command when/while this {@link Trigger} is triggered.
+     *
+     * @param cmd The Command to trigger.
+     * @return This {@link Trigger} for chaining methods.
+     */
+    public Trigger trigger(Command cmd) {
+        mCommands.add(cmd);
         // add command to scheduler.
         CommandScheduler.getInstance()
                 .addButton(
                         () -> {
-                            if (!mDisabled && get() && isGroupEnabled(group)) cmd.schedule();
+                            if (mEnabled && get()) cmd.schedule();
                         });
         return this;
     }
 
     /**
-     * Execute the given command when this Trigger is triggered.
-     *
-     * @param cmd
-     * @return This Trigger for chaining methods.
-     */
-    public Trigger trigger(Command cmd) {
-        return trigger(cmd, kDefaultGroup);
-    }
-
-    /**
-     * @param activateOn
-     * @return A Trigger with the same input, but with a different ActivationCondition.
+     * @param activateOn The {@link ActivationCondition} to use.
+     * @return A {@link Trigger} with the same input, but with a different ActivationCondition.
      */
     public Trigger activate(ActivationCondition activateOn) {
         return new Trigger(mInput, activateOn);
     }
 
-    /** @return If this Trigger is disabled. */
-    public boolean isDisabled() {
-        return mDisabled;
+    /**
+     * Private setter method for {@link Sendable}.
+     *
+     * @param enabled Whether to enable the trigger.
+     */
+    private void setState(boolean enabled) {
+        mEnabled = enabled;
     }
 
-    /** Disables this Trigger. */
-    public void disable() {
-        mDisabled = true;
-    }
-
-    /** Enables this Trigger. */
+    /** Enables this {@link Trigger}. */
     public void enable() {
-        mDisabled = true;
+        mEnabled = true;
+    }
+
+    /** Disables this {@link Trigger}. */
+    public void disable() {
+        mEnabled = false;
+        // Cancel commands if the trigger gets disabled.
+        mCommands.forEach(Command::cancel);
+    }
+
+    /** @return If this {@link Trigger} is enabled. */
+    public boolean isEnabled() {
+        return mEnabled;
+    }
+
+    /** @return If this {@link Trigger} is disabled. */
+    public boolean isDisabled() {
+        return !mEnabled;
     }
 
     /**
-     * Create a Trigger representing a logical AND with another Trigger.
+     * Create a {@link Trigger} representing a logical AND with another {@link Trigger}.
      *
      * <pre>
      * AND
@@ -221,26 +192,15 @@ public class Trigger implements BooleanSupplier {
      * |1|1||1|
      * </pre>
      *
-     * @param other
-     * @param activation
-     * @return A Trigger representing logical AND, while following the given ActivationCondition.
-     */
-    public Trigger and(Trigger other, ActivationCondition activation) {
-        return new Trigger(() -> get() && other.get(), activation);
-    }
-
-    /**
-     * Create a Trigger representing a logical AND with another Trigger.
-     *
-     * @param other
-     * @return A Trigger representing logical AND, activating while high.
+     * @param other The other {@link Trigger}.
+     * @return A {@link Trigger} representing logical AND.
      */
     public Trigger and(Trigger other) {
-        return and(other, ActivationCondition.WHILE_HIGH);
+        return new Trigger(() -> get() && other.get());
     }
 
     /**
-     * Create a Trigger representing a logical NAND with another Trigger.
+     * Create a {@link Trigger} representing a logical NAND with another {@link Trigger}.
      *
      * <pre>
      * NAND
@@ -251,26 +211,15 @@ public class Trigger implements BooleanSupplier {
      * |1|1||0|
      * </pre>
      *
-     * @param other
-     * @param activation
-     * @return A Trigger representing logical NAND, while following the givin ActivationCondition.
-     */
-    public Trigger nand(Trigger other, ActivationCondition activation) {
-        return new Trigger(() -> !(get() && other.get()), activation);
-    }
-
-    /**
-     * Create a Trigger representing a logical NAND with another Trigger.
-     *
-     * @param other
-     * @return A Trigger representing logical NAND, activating while high.
+     * @param other The other {@link Trigger}.
+     * @return A {@link Trigger} representing logical NAND.
      */
     public Trigger nand(Trigger other) {
-        return nand(other, ActivationCondition.WHILE_HIGH);
+        return new Trigger(() -> !and(other).get());
     }
 
     /**
-     * Create a Trigger representing a logical OR with another Trigger.
+     * Create a {@link Trigger} representing a logical OR with another {@link Trigger}.
      *
      * <pre>
      * OR
@@ -281,26 +230,15 @@ public class Trigger implements BooleanSupplier {
      * |1|1||1|
      * </pre>
      *
-     * @param other
-     * @param activation
-     * @return A Trigger representing logical OR, while following the given ActivationCondition.
-     */
-    public Trigger or(Trigger other, ActivationCondition activation) {
-        return new Trigger(() -> get() || other.get(), activation);
-    }
-
-    /**
-     * Create a Trigger representing a logical OR with another trigger.
-     *
-     * @param other
-     * @return A Trigger representing logical OR, activating while high.
+     * @param other The other {@link Trigger}.
+     * @return A {@link Trigger} representing logical OR.
      */
     public Trigger or(Trigger other) {
-        return or(other, ActivationCondition.WHILE_HIGH);
+        return new Trigger(() -> get() || other.get());
     }
 
     /**
-     * Create a Trigger representing a logical XOR with another Trigger.
+     * Create a {@link Trigger} representing a logical XOR with another {@link Trigger}.
      *
      * <pre>
      * XOR
@@ -311,26 +249,15 @@ public class Trigger implements BooleanSupplier {
      * |1|1||0|
      * </pre>
      *
-     * @param other
-     * @param activation
-     * @return A Trigger representing logical XOR, while following the given ActivationCondition.
-     */
-    public Trigger xor(Trigger other, ActivationCondition activation) {
-        return new Trigger(() -> get() ^ other.get(), activation);
-    }
-
-    /**
-     * Create a Trigger representing a logical XOR with another Trigger.
-     *
-     * @param other
-     * @return A Trigger representing logical XOR, activating while high.
+     * @param other The other {@link Trigger}.
+     * @return A {@link Trigger} representing logical XOR.
      */
     public Trigger xor(Trigger other) {
-        return xor(other, ActivationCondition.WHILE_HIGH);
+        return new Trigger(() -> get() ^ other.get());
     }
 
     /**
-     * Create a Trigger representing a logical NOR with another Trigger.
+     * Create a {@link Trigger} representing a logical NOR with another {@link Trigger}.
      *
      * <pre>
      * NOR
@@ -341,29 +268,18 @@ public class Trigger implements BooleanSupplier {
      * |1|1||0|
      * </pre>
      *
-     * @param other
-     * @param activation
-     * @return A Trigger representing logical NOR, while following the given ActivationCondition.
-     */
-    public Trigger nor(Trigger other, ActivationCondition activation) {
-        return new Trigger(() -> !or(other).get(), activation);
-    }
-
-    /**
-     * Create a Trigger representing a logical NOR with another Trigger.
-     *
-     * @param other
-     * @return A Trigger representing logical NOR, activating while high.
+     * @param other The other {@link Trigger}.
+     * @return A {@link Trigger} representing logical NOR.
      */
     public Trigger nor(Trigger other) {
-        return nor(other, ActivationCondition.WHILE_HIGH);
+        return new Trigger(() -> !or(other).get());
     }
 
     /**
-     * Create a Trigger representing a logical XNOR with another Trigger.
+     * Create a {@link Trigger} representing a logical XNOR with another {@link Trigger}.
      *
      * <pre>
-     * AND
+     * XNOR
      * |A|B||C|
      * |0|0||1|
      * |1|0||0|
@@ -371,37 +287,35 @@ public class Trigger implements BooleanSupplier {
      * |1|1||1|
      * </pre>
      *
-     * @param other
-     * @param activation
-     * @return A Trigger representing logical XNOR, while following the given ActivationCondition.
-     */
-    public Trigger xnor(Trigger other, ActivationCondition activation) {
-        return new Trigger(() -> !xor(other).get(), activation);
-    }
-
-    /**
-     * Create a Trigger representing a logical XNOR with another Trigger.
-     *
-     * @param other
-     * @return A Trigger representing logical XNOR, activating while high.
+     * @param other The other {@link Trigger}.
+     * @return A {@link Trigger} representing logical XNOR.
      */
     public Trigger xnor(Trigger other) {
-        return xnor(other, ActivationCondition.WHILE_HIGH);
+        return new Trigger(() -> !xor(other).get());
     }
 
     /**
-     * Create a Trigger representing a logical NOT.
+     * Create a {@link Trigger} representing a logical NOT.
      *
      * <pre>
-     * AND
+     * NOT
      * |A||B|
      * |0||1|
      * |1||0|
      * </pre>
      *
-     * @return A Trigger representing logical NOT, activating the same way this Trigger is.
+     * @return A {@link Trigger} representing logical NOT.
      */
     public Trigger not() {
-        return new Trigger(() -> !get(), mActivation);
+        return new Trigger(() -> !get());
+    }
+
+    @Override
+    public void initSendable(SendableBuilder builder) {
+        builder.setActuator(true);
+        builder.setSafeState(this::disable);
+        builder.setSmartDashboardType("Trigger");
+        builder.addBooleanProperty("enabled", this::isEnabled, this::setState);
+        builder.addBooleanProperty("output", this::get, null);
     }
 }

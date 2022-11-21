@@ -8,7 +8,6 @@ package io.github.tigerbotics7125.tigerlib.input;
 import io.github.tigerbotics7125.tigerlib.util.JoystickUtil;
 
 import edu.wpi.first.wpilibj.GenericHID;
-import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 /**
  * A {@link Trigger} wrapper for axes.
@@ -20,8 +19,6 @@ public class JoystickAxisTrigger extends Trigger {
     private final GenericHID mJoystick;
     private final int mAxis;
     private final boolean mInverted;
-    private final double mThreshold;
-    private final ThresholdType mThresholdType;
 
     public enum ThresholdType {
         /**
@@ -66,10 +63,26 @@ public class JoystickAxisTrigger extends Trigger {
             double threshold,
             ThresholdType thresholdType,
             boolean invert) {
+
+        super(
+                () -> {
+                    double input = joystick.getRawAxis(axis) * (invert ? -1 : 1);
+                    switch (thresholdType) {
+                        case Exact:
+                            return input == threshold;
+                        case LessThan:
+                            return input < threshold;
+                        case GreaterThan:
+                            return input > threshold;
+                        case Deadband:
+                            return Math.abs(input) > threshold;
+                        default:
+                            return false;
+                    }
+                });
+
         mJoystick = joystick;
         mAxis = axis;
-        mThreshold = threshold;
-        mThresholdType = thresholdType;
         mInverted = invert;
     }
 
@@ -86,6 +99,15 @@ public class JoystickAxisTrigger extends Trigger {
         return getRawValue() * (mInverted ? -1 : 1);
     }
 
+    /**
+     * Unless overriden, the default implementation is to:
+     *
+     * <p>{@link JoystickUtil#deadband(double, double)} the value by .075.
+     *
+     * <p>{@link JoystickUtil#clamp(double, double, double)} the value [-1, 1].
+     *
+     * @return A cleansed joystick input.
+     */
     public double getCleanValue() {
         double value = getValue();
         value = JoystickUtil.deadband(value, .075);
@@ -93,20 +115,18 @@ public class JoystickAxisTrigger extends Trigger {
         return value;
     }
 
-    /** @return Whether the axis is determined as active or not. */
-    @Override
-    public boolean getAsBoolean() {
-        switch (this.mThresholdType) {
-            case Exact:
-                return getValue() == mThreshold;
-            case LessThan:
-                return getValue() < mThreshold;
-            case GreaterThan:
-                return getValue() > mThreshold;
-            case Deadband:
-                return Math.abs(getValue()) > mThreshold;
-            default:
-                return false;
-        }
+    /**
+     * Create a new {@link JoystickAxisTrigger} representing the same joystick axis, but with a
+     * different threshold condition.
+     *
+     * @param thresholdType The new {@link ThresholdType}.
+     * @param threshold The new threshold.
+     * @param invert Whether to invert the new {@link JoystickAxisTrigger} from this one.
+     * @return A {@link JoystickAxisTrigger} with a new threshold.
+     */
+    public JoystickAxisTrigger withThreshold(
+            ThresholdType thresholdType, double threshold, boolean invert) {
+        return new JoystickAxisTrigger(
+                mJoystick, mAxis, threshold, thresholdType, invert ^ mInverted);
     }
 }
