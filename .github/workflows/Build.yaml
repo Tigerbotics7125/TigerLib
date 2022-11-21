@@ -1,16 +1,8 @@
 name: Build
 
 on:
-  push:
-    branches:
-      - main
-    paths:
-      - '**.java'
-      - '**.gradle'
   pull_request:
-      - created
-      - synchronize
-      - reopened
+    types: [created, synchronize, reopened]
   workflow_dispatch:
 
 jobs:
