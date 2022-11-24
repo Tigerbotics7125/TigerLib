@@ -16,8 +16,8 @@ import java.util.function.Function;
 public class JoystickAxis implements Sendable {
     private final GenericHID mJoystick;
     private final int mAxis;
-    private final boolean mInverted;
 
+    private boolean mInverted;
     private Function<Double, Double> mInputCleaner =
             (input) -> {
                 input = JoystickUtil.deadband(input, .075);
@@ -26,26 +26,37 @@ public class JoystickAxis implements Sendable {
                 return input;
             };
 
+    /**
+     * Create a new {@link JoystickAxis} Object.
+     *
+     * @param joystick The HID controller to read the axis from.
+     * @param axis The axis index.
+     * @param inverted Whether to invert the axis from its raw reading.
+     */
     public JoystickAxis(GenericHID joystick, int axis, boolean inverted) {
         mJoystick = joystick;
         mAxis = axis;
         mInverted = inverted;
     }
 
+    /** @return Cleaning function applied to {@link JoystickAxis#getRaw()}. */
     public double get() {
         return mInputCleaner.apply(getRaw());
     }
 
+    /** @return Raw axis input, iverted if set. */
     public double getRaw() {
         return mJoystick.getRawAxis(mAxis) * (mInverted ? -1 : 1);
     }
 
+    /** @param inputCleanerFunction Function to clean the raw input. */
     public void setCleaner(Function<Double, Double> inputCleanerFunction) {
         mInputCleaner = inputCleanerFunction;
     }
 
-    public JoystickAxis invert() {
-        return new JoystickAxis(mJoystick, mAxis, !mInverted);
+    /** Invert the input from the current state. */
+    public void invert() {
+        mInverted = !mInverted;
     }
 
     @Override

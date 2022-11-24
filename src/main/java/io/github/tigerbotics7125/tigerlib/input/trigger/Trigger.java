@@ -245,7 +245,7 @@ public class Trigger implements BooleanSupplier, Sendable {
      * </pre>
      *
      * @param other The other {@link Trigger}.
-     * @return A {@link Trigger} representing logical AND.
+     * @return A {@link Trigger} representing logical AND, activating as this {@link Trigger} does.
      */
     public Trigger and(Trigger other) {
         return new Trigger(() -> get() && other.get(), mActivation);
@@ -264,7 +264,7 @@ public class Trigger implements BooleanSupplier, Sendable {
      * </pre>
      *
      * @param other The other {@link Trigger}.
-     * @return A {@link Trigger} representing logical NAND.
+     * @return A {@link Trigger} representing logical NAND, activating as this {@link Trigger} does.
      */
     public Trigger nand(Trigger other) {
         return new Trigger(() -> !and(other).get(), mActivation);
@@ -283,7 +283,7 @@ public class Trigger implements BooleanSupplier, Sendable {
      * </pre>
      *
      * @param other The other {@link Trigger}.
-     * @return A {@link Trigger} representing logical OR.
+     * @return A {@link Trigger} representing logical OR, activating as this {@link Trigger} does.
      */
     public Trigger or(Trigger other) {
         return new Trigger(() -> get() || other.get(), mActivation);
@@ -302,7 +302,7 @@ public class Trigger implements BooleanSupplier, Sendable {
      * </pre>
      *
      * @param other The other {@link Trigger}.
-     * @return A {@link Trigger} representing logical XOR.
+     * @return A {@link Trigger} representing logical XOR, activating as this {@link Trigger} does.
      */
     public Trigger xor(Trigger other) {
         return new Trigger(() -> get() ^ other.get(), mActivation);
@@ -321,7 +321,7 @@ public class Trigger implements BooleanSupplier, Sendable {
      * </pre>
      *
      * @param other The other {@link Trigger}.
-     * @return A {@link Trigger} representing logical NOR.
+     * @return A {@link Trigger} representing logical NOR, activating as this {@link Trigger} does.
      */
     public Trigger nor(Trigger other) {
         return new Trigger(() -> !or(other).get(), mActivation);
@@ -340,7 +340,7 @@ public class Trigger implements BooleanSupplier, Sendable {
      * </pre>
      *
      * @param other The other {@link Trigger}.
-     * @return A {@link Trigger} representing logical XNOR.
+     * @return A {@link Trigger} representing logical XNOR, activating as this {@link Trigger} does.
      */
     public Trigger xnor(Trigger other) {
         return new Trigger(() -> !xor(other).get(), mActivation);
@@ -356,7 +356,7 @@ public class Trigger implements BooleanSupplier, Sendable {
      * |1||0|
      * </pre>
      *
-     * @return A {@link Trigger} representing logical NOT.
+     * @return A {@link Trigger} representing logical NOT, activating as this {@link Trigger} does.
      */
     public Trigger not() {
         return new Trigger(() -> !get(), mActivation);
