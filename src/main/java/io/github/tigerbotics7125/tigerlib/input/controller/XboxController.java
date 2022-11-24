@@ -3,17 +3,15 @@
  * This work is licensed under the terms of the GNU GPLv3 license
  * found in the root directory of this project.
  */
-package io.github.tigerbotics7125.tigerlib.input.oi;
+package io.github.tigerbotics7125.tigerlib.input.controller;
 
-import io.github.tigerbotics7125.tigerlib.input.JoystickAxisTrigger;
-import io.github.tigerbotics7125.tigerlib.input.JoystickAxisTrigger.ThresholdType;
-import io.github.tigerbotics7125.tigerlib.input.JoystickTrigger;
+import java.util.EnumMap;
 
 import edu.wpi.first.hal.FRCNetComm.tResourceType;
 import edu.wpi.first.hal.HAL;
 import edu.wpi.first.wpilibj.GenericHID;
-
-import java.util.EnumMap;
+import io.github.tigerbotics7125.tigerlib.input.joystick.JoystickAxis;
+import io.github.tigerbotics7125.tigerlib.input.trigger.JoystickTrigger;
 
 /**
  * An input wrapper for the Xbox controller.
@@ -64,7 +62,7 @@ public class XboxController extends GenericHID {
     public final POV pov;
 
     private final EnumMap<XboxButton, JoystickTrigger> mButtons = new EnumMap<>(XboxButton.class);
-    private final EnumMap<XboxAxis, JoystickAxisTrigger> mAxes = new EnumMap<>(XboxAxis.class);
+    private final EnumMap<XboxAxis, JoystickAxis> mAxes = new EnumMap<>(XboxAxis.class);
 
     /** @param port The port on the Driver Station that the joystick is plugged into */
     public XboxController(int port) {
@@ -86,14 +84,14 @@ public class XboxController extends GenericHID {
     }
 
     /**
-     * Builds a {@link JoystickAxisTrigger} for this controller from the provided {@link XboxAxis}.
+     * Builds a {@link JoystickAxis} for this controller from the provided {@link XboxAxis}.
      *
      * @param axis The Axis to build for.
-     * @return The JoystickAxisTrigger.
+     * @return The JoystickAxis.
      */
-    private JoystickAxisTrigger build(
-            XboxAxis axis, double threshold, ThresholdType thresholdType, boolean inverted) {
-        return new JoystickAxisTrigger(this, axis.value, threshold, thresholdType, inverted);
+    private JoystickAxis build(
+            XboxAxis axis, boolean inverted) {
+        return new JoystickAxis(this, axis.value, inverted);
     }
 
     /** @return The a {@link JoystickTrigger}. */
@@ -151,33 +149,33 @@ public class XboxController extends GenericHID {
      *
      * <p>Note: This axis is inverted.
      *
-     * @return The left stick's x {@link JoystickAxisTrigger}
+     * @return The left stick's x {@link JoystickAxis}
      */
-    public JoystickAxisTrigger leftX() {
+    public JoystickAxis leftX() {
         return mAxes.computeIfAbsent(
-                XboxAxis.LEFT_X, (axis) -> build(axis, .98, ThresholdType.Deadband, true));
+                XboxAxis.LEFT_X, (axis) -> build(axis, false));
     }
 
     /**
      * North is considered positive.
      *
-     * @return The left stick's y {@link JoystickAxisTrigger}.
+     * @return The left stick's y {@link JoystickAxis}.
      */
-    public JoystickAxisTrigger leftY() {
+    public JoystickAxis leftY() {
         return mAxes.computeIfAbsent(
-                XboxAxis.LEFT_Y, (axis) -> build(axis, .98, ThresholdType.Deadband, false));
+                XboxAxis.LEFT_Y, (axis) -> build(axis, true));
     }
 
-    /** @return The left trigger's {@link JoystickAxisTrigger}. */
-    public JoystickAxisTrigger lt() {
+    /** @return The left trigger's {@link JoystickAxis}. */
+    public JoystickAxis lt() {
         return mAxes.computeIfAbsent(
-                XboxAxis.LT, (axis) -> build(axis, 0.02, ThresholdType.GreaterThan, false));
+                XboxAxis.LT, (axis) -> build(axis, false));
     }
 
-    /** @return The right trigger's {@link JoystickAxisTrigger}. */
-    public JoystickAxisTrigger rt() {
+    /** @return The right trigger's {@link JoystickAxis}. */
+    public JoystickAxis rt() {
         return mAxes.computeIfAbsent(
-                XboxAxis.RT, (axis) -> build(axis, 0.02, ThresholdType.GreaterThan, false));
+                XboxAxis.RT, (axis) -> build(axis, false));
     }
 
     /**
@@ -185,20 +183,20 @@ public class XboxController extends GenericHID {
      *
      * <p>Note: This axis is inverted.
      *
-     * @return The right stick's x {@link JoystickAxisTrigger}.
+     * @return The right stick's x {@link JoystickAxis}.
      */
-    public JoystickAxisTrigger rightX() {
+    public JoystickAxis rightX() {
         return mAxes.computeIfAbsent(
-                XboxAxis.RIGHT_X, (axis) -> build(axis, .98, ThresholdType.Deadband, true));
+                XboxAxis.RIGHT_X, (axis) -> build(axis, false));
     }
 
     /**
      * North is considered positive.
      *
-     * @return The right stick's y {@link JoystickAxisTrigger}.
+     * @return The right stick's y {@link JoystickAxis}.
      */
-    public JoystickAxisTrigger rightY() {
+    public JoystickAxis rightY() {
         return mAxes.computeIfAbsent(
-                XboxAxis.RIGHT_Y, (axis) -> build(axis, .98, ThresholdType.Deadband, false));
+                XboxAxis.RIGHT_Y, (axis) -> build(axis, true));
     }
 }
