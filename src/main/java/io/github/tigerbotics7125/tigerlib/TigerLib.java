@@ -5,13 +5,9 @@
  */
 package io.github.tigerbotics7125.tigerlib;
 
-<<<<<<< HEAD
 import io.github.tigerbotics7125.tigerlib.input.trigger.Trigger;
 
-=======
->>>>>>> 578989842ace547513acb075805d2a6318a28cca
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import io.github.tigerbotics7125.tigerlib.input.trigger.Trigger;
 
 /**
  * This class contains a collection of library classes which would on their own, be setup in {@code

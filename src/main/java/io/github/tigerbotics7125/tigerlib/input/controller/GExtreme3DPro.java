@@ -4,17 +4,11 @@
  * found in the root directory of this project.
  */
 package io.github.tigerbotics7125.tigerlib.input.controller;
-<<<<<<< HEAD:src/main/java/io/github/tigerbotics7125/tigerlib/input/controller/GExtreme3DPro.java
 
 import io.github.tigerbotics7125.tigerlib.input.trigger.JoystickAxisTrigger;
 import io.github.tigerbotics7125.tigerlib.input.trigger.JoystickAxisTrigger.ThresholdType;
 import io.github.tigerbotics7125.tigerlib.input.trigger.JoystickTrigger;
-=======
->>>>>>> 578989842ace547513acb075805d2a6318a28cca:src/main/java/io/github/tigerbotics7125/tigerlib/input/oi/GExtreme3DPro.java
 
-import io.github.tigerbotics7125.tigerlib.input.trigger.JoystickAxisTrigger;
-import io.github.tigerbotics7125.tigerlib.input.trigger.JoystickTrigger;
-import io.github.tigerbotics7125.tigerlib.input.trigger.JoystickAxisTrigger.ThresholdType;
 import edu.wpi.first.hal.FRCNetComm.tResourceType;
 import edu.wpi.first.hal.HAL;
 import edu.wpi.first.wpilibj.GenericHID;

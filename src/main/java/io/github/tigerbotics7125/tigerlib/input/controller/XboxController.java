@@ -5,18 +5,14 @@
  */
 package io.github.tigerbotics7125.tigerlib.input.controller;
 
-<<<<<<< HEAD:src/main/java/io/github/tigerbotics7125/tigerlib/input/controller/XboxController.java
 import io.github.tigerbotics7125.tigerlib.input.joystick.JoystickAxis;
 import io.github.tigerbotics7125.tigerlib.input.trigger.JoystickTrigger;
-=======
-import java.util.EnumMap;
->>>>>>> 578989842ace547513acb075805d2a6318a28cca:src/main/java/io/github/tigerbotics7125/tigerlib/input/oi/XboxController.java
 
 import edu.wpi.first.hal.FRCNetComm.tResourceType;
 import edu.wpi.first.hal.HAL;
 import edu.wpi.first.wpilibj.GenericHID;
-import io.github.tigerbotics7125.tigerlib.input.joystick.JoystickAxis;
-import io.github.tigerbotics7125.tigerlib.input.trigger.JoystickTrigger;
+
+import java.util.EnumMap;
 
 /**
  * An input wrapper for the Xbox controller.
@@ -94,12 +90,7 @@ public class XboxController extends GenericHID {
      * @param axis The Axis to build for.
      * @return The JoystickAxis.
      */
-<<<<<<< HEAD:src/main/java/io/github/tigerbotics7125/tigerlib/input/controller/XboxController.java
     private JoystickAxis build(XboxAxis axis, boolean inverted) {
-=======
-    private JoystickAxis build(
-            XboxAxis axis, boolean inverted) {
->>>>>>> 578989842ace547513acb075805d2a6318a28cca:src/main/java/io/github/tigerbotics7125/tigerlib/input/oi/XboxController.java
         return new JoystickAxis(this, axis.value, inverted);
     }
 
@@ -161,12 +152,7 @@ public class XboxController extends GenericHID {
      * @return The left stick's x {@link JoystickAxis}
      */
     public JoystickAxis leftX() {
-<<<<<<< HEAD:src/main/java/io/github/tigerbotics7125/tigerlib/input/controller/XboxController.java
         return mAxes.computeIfAbsent(XboxAxis.LEFT_X, (axis) -> build(axis, false));
-=======
-        return mAxes.computeIfAbsent(
-                XboxAxis.LEFT_X, (axis) -> build(axis, false));
->>>>>>> 578989842ace547513acb075805d2a6318a28cca:src/main/java/io/github/tigerbotics7125/tigerlib/input/oi/XboxController.java
     }
 
     /**
@@ -175,32 +161,17 @@ public class XboxController extends GenericHID {
      * @return The left stick's y {@link JoystickAxis}.
      */
     public JoystickAxis leftY() {
-<<<<<<< HEAD:src/main/java/io/github/tigerbotics7125/tigerlib/input/controller/XboxController.java
         return mAxes.computeIfAbsent(XboxAxis.LEFT_Y, (axis) -> build(axis, true));
-=======
-        return mAxes.computeIfAbsent(
-                XboxAxis.LEFT_Y, (axis) -> build(axis, true));
->>>>>>> 578989842ace547513acb075805d2a6318a28cca:src/main/java/io/github/tigerbotics7125/tigerlib/input/oi/XboxController.java
     }
 
     /** @return The left trigger's {@link JoystickAxis}. */
     public JoystickAxis lt() {
-<<<<<<< HEAD:src/main/java/io/github/tigerbotics7125/tigerlib/input/controller/XboxController.java
         return mAxes.computeIfAbsent(XboxAxis.LT, (axis) -> build(axis, false));
-=======
-        return mAxes.computeIfAbsent(
-                XboxAxis.LT, (axis) -> build(axis, false));
->>>>>>> 578989842ace547513acb075805d2a6318a28cca:src/main/java/io/github/tigerbotics7125/tigerlib/input/oi/XboxController.java
     }
 
     /** @return The right trigger's {@link JoystickAxis}. */
     public JoystickAxis rt() {
-<<<<<<< HEAD:src/main/java/io/github/tigerbotics7125/tigerlib/input/controller/XboxController.java
         return mAxes.computeIfAbsent(XboxAxis.RT, (axis) -> build(axis, false));
-=======
-        return mAxes.computeIfAbsent(
-                XboxAxis.RT, (axis) -> build(axis, false));
->>>>>>> 578989842ace547513acb075805d2a6318a28cca:src/main/java/io/github/tigerbotics7125/tigerlib/input/oi/XboxController.java
     }
 
     /**
@@ -211,12 +182,7 @@ public class XboxController extends GenericHID {
      * @return The right stick's x {@link JoystickAxis}.
      */
     public JoystickAxis rightX() {
-<<<<<<< HEAD:src/main/java/io/github/tigerbotics7125/tigerlib/input/controller/XboxController.java
         return mAxes.computeIfAbsent(XboxAxis.RIGHT_X, (axis) -> build(axis, false));
-=======
-        return mAxes.computeIfAbsent(
-                XboxAxis.RIGHT_X, (axis) -> build(axis, false));
->>>>>>> 578989842ace547513acb075805d2a6318a28cca:src/main/java/io/github/tigerbotics7125/tigerlib/input/oi/XboxController.java
     }
 
     /**
@@ -225,11 +191,6 @@ public class XboxController extends GenericHID {
      * @return The right stick's y {@link JoystickAxis}.
      */
     public JoystickAxis rightY() {
-<<<<<<< HEAD:src/main/java/io/github/tigerbotics7125/tigerlib/input/controller/XboxController.java
         return mAxes.computeIfAbsent(XboxAxis.RIGHT_Y, (axis) -> build(axis, true));
-=======
-        return mAxes.computeIfAbsent(
-                XboxAxis.RIGHT_Y, (axis) -> build(axis, true));
->>>>>>> 578989842ace547513acb075805d2a6318a28cca:src/main/java/io/github/tigerbotics7125/tigerlib/input/oi/XboxController.java
     }
 }
