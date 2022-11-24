@@ -1,6 +1,6 @@
 io.github.tigerbotics7125.tigerlib
-io.github.tigerbotics7125.tigerlib.control.drive
-io.github.tigerbotics7125.tigerlib.input
-io.github.tigerbotics7125.tigerlib.input.oi
+io.github.tigerbotics7125.tigerlib.input.controller
+io.github.tigerbotics7125.tigerlib.input.joystick
+io.github.tigerbotics7125.tigerlib.input.trigger
 io.github.tigerbotics7125.tigerlib.math
 io.github.tigerbotics7125.tigerlib.util
