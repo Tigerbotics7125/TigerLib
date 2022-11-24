@@ -5,7 +5,10 @@
  */
 package io.github.tigerbotics7125.tigerlib.input.trigger;
 
-import io.github.tigerbotics7125.tigerlib.TigerLib;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.function.BooleanSupplier;
 
 import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.math.filter.Debouncer.DebounceType;
@@ -14,19 +17,28 @@ import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.RunCommand;
+<<<<<<< HEAD:src/main/java/io/github/tigerbotics7125/tigerlib/input/trigger/Trigger.java
 
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.function.BooleanSupplier;
+=======
+import io.github.tigerbotics7125.tigerlib.TigerLib;
+>>>>>>> 578989842ace547513acb075805d2a6318a28cca:src/main/java/io/github/tigerbotics7125/tigerlib/input/Trigger.java
 
 /**
- * This class provides a way to track a boolean compared to time as a circuit would.
+ * This class provides a way to track a boolean compared to time as a circuit
+ * would.
  *
- * <p>This class is meant to be a replacement for WPILib's version. Anything that uses a WPILib
+ * <p>
+ * This class is meant to be a replacement for WPILib's version. Anything that
+ * uses a WPILib
  * Trigger can easily be converted to work with this class.
  *
- * <p>The user must either run {@link TigerLib#periodic()} (ideally) or {@link Trigger#periodic()}
+ * <p>
+ * The user must either run {@link TigerLib#periodic()} (ideally) or
+ * {@link Trigger#periodic()}
  * (less idealy) in their robot's periodic function for full functionality.
  *
  * @author Jeffrey Morris | 7125 Tigerbotics
@@ -39,7 +51,9 @@ public class Trigger implements BooleanSupplier, Sendable {
     /**
      * Static call to update all {@link Trigger} Objects.
      *
-     * <p>The user should either call this function or {@link TigerLib#periodic()} in their robot's
+     * <p>
+     * The user should either call this function or {@link TigerLib#periodic()} in
+     * their robot's
      * periodic function.
      */
     public static void periodic() {
@@ -50,7 +64,9 @@ public class Trigger implements BooleanSupplier, Sendable {
     /**
      * Activation conditions for a {@link Trigger}.
      *
-     * <p>These values are representative of different ways a circuit could change its state.
+     * <p>
+     * These values are representative of different ways a circuit could change its
+     * state.
      */
     public enum ActivationCondition {
         WHILE_LOW,
@@ -70,9 +86,10 @@ public class Trigger implements BooleanSupplier, Sendable {
     /**
      * Create a new {@link Trigger} Object.
      *
-     * <p>NOTE: This Constructor is <b>private</b> to simplify user code.
+     * <p>
+     * NOTE: This Constructor is <b>private</b> to simplify user code.
      *
-     * @param input The boolean input.
+     * @param input      The boolean input.
      * @param activateOn The {@link ActivationCondition} to follow.
      */
     private Trigger(BooleanSupplier input, ActivationCondition activateOn) {
@@ -144,6 +161,7 @@ public class Trigger implements BooleanSupplier, Sendable {
                 .addButton(
                         () -> {
                             // Cancel "WHILE" commands when trigger becomes inactive.
+<<<<<<< HEAD:src/main/java/io/github/tigerbotics7125/tigerlib/input/trigger/Trigger.java
                             if (cmd.isScheduled()
                                     && !get()
                                     && (mActivation == ActivationCondition.WHILE_LOW
@@ -152,6 +170,15 @@ public class Trigger implements BooleanSupplier, Sendable {
                             } else {
                                 // Schedule commands.
                                 if (mEnabled && get()) cmd.schedule();
+=======
+                            if (cmd.isScheduled() && !get() && (mActivation == ActivationCondition.WHILE_LOW
+                                    || mActivation == ActivationCondition.WHILE_HIGH)) {
+                                cmd.cancel();
+                            } else {
+                                // Schedule commands.
+                                if (mEnabled && get())
+                                    cmd.schedule();
+>>>>>>> 578989842ace547513acb075805d2a6318a28cca:src/main/java/io/github/tigerbotics7125/tigerlib/input/Trigger.java
                             }
                         });
         return this;
@@ -159,7 +186,8 @@ public class Trigger implements BooleanSupplier, Sendable {
 
     /**
      * @param activateOn The {@link ActivationCondition} to use.
-     * @return A {@link Trigger} with the same input, but with a different ActivationCondition.
+     * @return A {@link Trigger} with the same input, but with a different
+     *         ActivationCondition.
      */
     public Trigger activate(ActivationCondition activateOn) {
         return new Trigger(mInput, activateOn);
@@ -197,6 +225,7 @@ public class Trigger implements BooleanSupplier, Sendable {
     }
 
     /**
+<<<<<<< HEAD:src/main/java/io/github/tigerbotics7125/tigerlib/input/trigger/Trigger.java
      * Creates a new {@link Trigger} which bases its input of the debounced input of this {@link
      * Trigger}.
      *
@@ -206,12 +235,28 @@ public class Trigger implements BooleanSupplier, Sendable {
      * <p>rising and falling {@link Trigger}s will debounce is the same way, but other will debounce
      * in both directions.
      *
+=======
+     * Creates a new {@link Trigger} which bases its input of the debounced input of
+     * this {@link Trigger}.
+     * <p>
+     * Depending on the {@link ActivationCondition} of this {@link Trigger}, the
+     * returned debounced {@link Trigger} will debounce in different ways.
+     * 
+     * <p>
+     * rising and falling {@link Trigger}s will debounce is the same way, but other
+     * will debounce in both directions.
+     * 
+>>>>>>> 578989842ace547513acb075805d2a6318a28cca:src/main/java/io/github/tigerbotics7125/tigerlib/input/Trigger.java
      * @param debounceTimeSeconds Time in seconds to debounce the input.
      * @return A debounced {@link Trigger}.
      */
     public Trigger debounce(double debounceTimeSeconds) {
         DebounceType t;
+<<<<<<< HEAD:src/main/java/io/github/tigerbotics7125/tigerlib/input/trigger/Trigger.java
         switch (mActivation) {
+=======
+        switch(mActivation) {
+>>>>>>> 578989842ace547513acb075805d2a6318a28cca:src/main/java/io/github/tigerbotics7125/tigerlib/input/Trigger.java
             case WHILE_LOW:
             case WHILE_HIGH:
             case ON_TRANSITION:
@@ -227,13 +272,22 @@ public class Trigger implements BooleanSupplier, Sendable {
                 t = DebounceType.kBoth;
                 break;
         }
+<<<<<<< HEAD:src/main/java/io/github/tigerbotics7125/tigerlib/input/trigger/Trigger.java
 
+=======
+        
+>>>>>>> 578989842ace547513acb075805d2a6318a28cca:src/main/java/io/github/tigerbotics7125/tigerlib/input/Trigger.java
         Debouncer d = new Debouncer(debounceTimeSeconds, t);
         return new Trigger(() -> d.calculate(this.getAsBoolean()));
     }
 
     /**
+<<<<<<< HEAD:src/main/java/io/github/tigerbotics7125/tigerlib/input/trigger/Trigger.java
      * Create a {@link Trigger} representing a logical AND with another {@link Trigger}.
+=======
+     * Create a {@link Trigger} representing a logical AND with another
+     * {@link Trigger}.
+>>>>>>> 578989842ace547513acb075805d2a6318a28cca:src/main/java/io/github/tigerbotics7125/tigerlib/input/Trigger.java
      *
      * <pre>
      * AND
@@ -252,7 +306,8 @@ public class Trigger implements BooleanSupplier, Sendable {
     }
 
     /**
-     * Create a {@link Trigger} representing a logical NAND with another {@link Trigger}.
+     * Create a {@link Trigger} representing a logical NAND with another
+     * {@link Trigger}.
      *
      * <pre>
      * NAND
@@ -271,7 +326,8 @@ public class Trigger implements BooleanSupplier, Sendable {
     }
 
     /**
-     * Create a {@link Trigger} representing a logical OR with another {@link Trigger}.
+     * Create a {@link Trigger} representing a logical OR with another
+     * {@link Trigger}.
      *
      * <pre>
      * OR
@@ -290,7 +346,8 @@ public class Trigger implements BooleanSupplier, Sendable {
     }
 
     /**
-     * Create a {@link Trigger} representing a logical XOR with another {@link Trigger}.
+     * Create a {@link Trigger} representing a logical XOR with another
+     * {@link Trigger}.
      *
      * <pre>
      * XOR
@@ -309,7 +366,8 @@ public class Trigger implements BooleanSupplier, Sendable {
     }
 
     /**
-     * Create a {@link Trigger} representing a logical NOR with another {@link Trigger}.
+     * Create a {@link Trigger} representing a logical NOR with another
+     * {@link Trigger}.
      *
      * <pre>
      * NOR
@@ -328,7 +386,8 @@ public class Trigger implements BooleanSupplier, Sendable {
     }
 
     /**
-     * Create a {@link Trigger} representing a logical XNOR with another {@link Trigger}.
+     * Create a {@link Trigger} representing a logical XNOR with another
+     * {@link Trigger}.
      *
      * <pre>
      * XNOR

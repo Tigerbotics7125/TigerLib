@@ -5,11 +5,14 @@
  */
 package io.github.tigerbotics7125.tigerlib.input.controller;
 
+<<<<<<< HEAD:src/main/java/io/github/tigerbotics7125/tigerlib/input/controller/POV.java
 import io.github.tigerbotics7125.tigerlib.input.trigger.JoystickPOVTrigger;
+=======
+import java.util.EnumMap;
+>>>>>>> 578989842ace547513acb075805d2a6318a28cca:src/main/java/io/github/tigerbotics7125/tigerlib/input/oi/POV.java
 
 import edu.wpi.first.wpilibj.GenericHID;
-
-import java.util.EnumMap;
+import io.github.tigerbotics7125.tigerlib.input.trigger.JoystickPOVTrigger;
 
 public class POV {
 
