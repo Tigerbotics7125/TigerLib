@@ -3,7 +3,7 @@
  * This work is licensed under the terms of the GNU GPLv3 license
  * found in the root directory of this project.
  */
-package io.github.tigerbotics7125.tigerlib.input;
+package io.github.tigerbotics7125.tigerlib.input.trigger;
 
 import edu.wpi.first.wpilibj.GenericHID;
 
