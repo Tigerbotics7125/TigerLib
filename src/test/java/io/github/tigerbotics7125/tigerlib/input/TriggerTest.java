@@ -153,7 +153,7 @@ public class TriggerTest {
 
         assertFalse(t.get());
 
-        Thread.sleep(10);
+        Thread.sleep(11);
 
         assertTrue(t.get());
     }
