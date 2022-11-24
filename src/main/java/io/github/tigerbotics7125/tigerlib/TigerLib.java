@@ -5,7 +5,7 @@
  */
 package io.github.tigerbotics7125.tigerlib;
 
-import io.github.tigerbotics7125.tigerlib.input.Trigger;
+import io.github.tigerbotics7125.tigerlib.input.trigger.Trigger;
 
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 

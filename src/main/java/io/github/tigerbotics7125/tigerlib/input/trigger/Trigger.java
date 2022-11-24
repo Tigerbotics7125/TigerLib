@@ -3,14 +3,17 @@
  * This work is licensed under the terms of the GNU GPLv3 license
  * found in the root directory of this project.
  */
-package io.github.tigerbotics7125.tigerlib.input;
+package io.github.tigerbotics7125.tigerlib.input.trigger;
 
 import io.github.tigerbotics7125.tigerlib.TigerLib;
 
+import edu.wpi.first.math.filter.Debouncer;
+import edu.wpi.first.math.filter.Debouncer.DebounceType;
 import edu.wpi.first.util.sendable.Sendable;
 import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.RunCommand;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -87,7 +90,7 @@ public class Trigger implements BooleanSupplier, Sendable {
      * @param input The boolean input.
      */
     public Trigger(BooleanSupplier input) {
-        this(input, ActivationCondition.WHILE_HIGH);
+        this(input, ActivationCondition.ON_RISING);
     }
 
     /** @return The input to this {@link Trigger}. */
@@ -124,6 +127,10 @@ public class Trigger implements BooleanSupplier, Sendable {
         return this;
     }
 
+    public Trigger trigger(Runnable toRun) {
+        return trigger(new RunCommand(toRun));
+    }
+
     /**
      * Execute the given command when/while this {@link Trigger} is triggered.
      *
@@ -136,7 +143,16 @@ public class Trigger implements BooleanSupplier, Sendable {
         CommandScheduler.getInstance()
                 .addButton(
                         () -> {
-                            if (mEnabled && get()) cmd.schedule();
+                            // Cancel "WHILE" commands when trigger becomes inactive.
+                            if (cmd.isScheduled()
+                                    && !get()
+                                    && (mActivation == ActivationCondition.WHILE_LOW
+                                            || mActivation == ActivationCondition.WHILE_HIGH)) {
+                                cmd.cancel();
+                            } else {
+                                // Schedule commands.
+                                if (mEnabled && get()) cmd.schedule();
+                            }
                         });
         return this;
     }
@@ -181,6 +197,42 @@ public class Trigger implements BooleanSupplier, Sendable {
     }
 
     /**
+     * Creates a new {@link Trigger} which bases its input of the debounced input of this {@link
+     * Trigger}.
+     *
+     * <p>Depending on the {@link ActivationCondition} of this {@link Trigger}, the returned
+     * debounced {@link Trigger} will debounce in different ways.
+     *
+     * <p>rising and falling {@link Trigger}s will debounce is the same way, but other will debounce
+     * in both directions.
+     *
+     * @param debounceTimeSeconds Time in seconds to debounce the input.
+     * @return A debounced {@link Trigger}.
+     */
+    public Trigger debounce(double debounceTimeSeconds) {
+        DebounceType t;
+        switch (mActivation) {
+            case WHILE_LOW:
+            case WHILE_HIGH:
+            case ON_TRANSITION:
+                t = DebounceType.kBoth;
+                break;
+            case ON_FALLING:
+                t = DebounceType.kFalling;
+                break;
+            case ON_RISING:
+                t = DebounceType.kRising;
+                break;
+            default:
+                t = DebounceType.kBoth;
+                break;
+        }
+
+        Debouncer d = new Debouncer(debounceTimeSeconds, t);
+        return new Trigger(() -> d.calculate(this.getAsBoolean()));
+    }
+
+    /**
      * Create a {@link Trigger} representing a logical AND with another {@link Trigger}.
      *
      * <pre>
@@ -193,10 +245,10 @@ public class Trigger implements BooleanSupplier, Sendable {
      * </pre>
      *
      * @param other The other {@link Trigger}.
-     * @return A {@link Trigger} representing logical AND.
+     * @return A {@link Trigger} representing logical AND, activating as this {@link Trigger} does.
      */
     public Trigger and(Trigger other) {
-        return new Trigger(() -> get() && other.get());
+        return new Trigger(() -> get() && other.get(), mActivation);
     }
 
     /**
@@ -212,10 +264,10 @@ public class Trigger implements BooleanSupplier, Sendable {
      * </pre>
      *
      * @param other The other {@link Trigger}.
-     * @return A {@link Trigger} representing logical NAND.
+     * @return A {@link Trigger} representing logical NAND, activating as this {@link Trigger} does.
      */
     public Trigger nand(Trigger other) {
-        return new Trigger(() -> !and(other).get());
+        return new Trigger(() -> !and(other).get(), mActivation);
     }
 
     /**
@@ -231,10 +283,10 @@ public class Trigger implements BooleanSupplier, Sendable {
      * </pre>
      *
      * @param other The other {@link Trigger}.
-     * @return A {@link Trigger} representing logical OR.
+     * @return A {@link Trigger} representing logical OR, activating as this {@link Trigger} does.
      */
     public Trigger or(Trigger other) {
-        return new Trigger(() -> get() || other.get());
+        return new Trigger(() -> get() || other.get(), mActivation);
     }
 
     /**
@@ -250,10 +302,10 @@ public class Trigger implements BooleanSupplier, Sendable {
      * </pre>
      *
      * @param other The other {@link Trigger}.
-     * @return A {@link Trigger} representing logical XOR.
+     * @return A {@link Trigger} representing logical XOR, activating as this {@link Trigger} does.
      */
     public Trigger xor(Trigger other) {
-        return new Trigger(() -> get() ^ other.get());
+        return new Trigger(() -> get() ^ other.get(), mActivation);
     }
 
     /**
@@ -269,10 +321,10 @@ public class Trigger implements BooleanSupplier, Sendable {
      * </pre>
      *
      * @param other The other {@link Trigger}.
-     * @return A {@link Trigger} representing logical NOR.
+     * @return A {@link Trigger} representing logical NOR, activating as this {@link Trigger} does.
      */
     public Trigger nor(Trigger other) {
-        return new Trigger(() -> !or(other).get());
+        return new Trigger(() -> !or(other).get(), mActivation);
     }
 
     /**
@@ -288,10 +340,10 @@ public class Trigger implements BooleanSupplier, Sendable {
      * </pre>
      *
      * @param other The other {@link Trigger}.
-     * @return A {@link Trigger} representing logical XNOR.
+     * @return A {@link Trigger} representing logical XNOR, activating as this {@link Trigger} does.
      */
     public Trigger xnor(Trigger other) {
-        return new Trigger(() -> !xor(other).get());
+        return new Trigger(() -> !xor(other).get(), mActivation);
     }
 
     /**
@@ -304,10 +356,10 @@ public class Trigger implements BooleanSupplier, Sendable {
      * |1||0|
      * </pre>
      *
-     * @return A {@link Trigger} representing logical NOT.
+     * @return A {@link Trigger} representing logical NOT, activating as this {@link Trigger} does.
      */
     public Trigger not() {
-        return new Trigger(() -> !get());
+        return new Trigger(() -> !get(), mActivation);
     }
 
     @Override

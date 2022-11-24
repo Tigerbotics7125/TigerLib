@@ -3,11 +3,15 @@
  * This work is licensed under the terms of the GNU GPLv3 license
  * found in the root directory of this project.
  */
-package io.github.tigerbotics7125.tigerlib.input;
+package io.github.tigerbotics7125.tigerlib.input.trigger;
 
+import io.github.tigerbotics7125.tigerlib.input.joystick.JoystickAxis;
 import io.github.tigerbotics7125.tigerlib.util.JoystickUtil;
 
+import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.GenericHID;
+
+import java.util.function.Function;
 
 /**
  * A {@link Trigger} wrapper for axes.
@@ -16,9 +20,6 @@ import edu.wpi.first.wpilibj.GenericHID;
  * @author Spectrum 3847
  */
 public class JoystickAxisTrigger extends Trigger {
-    private final GenericHID mJoystick;
-    private final int mAxis;
-    private final boolean mInverted;
 
     public enum ThresholdType {
         /**
@@ -47,9 +48,12 @@ public class JoystickAxisTrigger extends Trigger {
         Deadband;
     }
 
+    private final JoystickAxis mJoystickAxis;
+    private final double mThreshold;
+    private final ThresholdType mThresholdType;
+
     /**
-     * Note: Invert param only inverts the returned value from the axis; if the axis would naturally
-     * return .46, the interperated value is -.46.
+     * Create a new {@link JoystickAxisTrigger} Object.
      *
      * @param joystick The HID device to read the axis from.
      * @param axis The axis index to read from.
@@ -63,40 +67,35 @@ public class JoystickAxisTrigger extends Trigger {
             double threshold,
             ThresholdType thresholdType,
             boolean invert) {
+        this(new JoystickAxis(joystick, axis, invert), threshold, thresholdType);
+    }
 
+    private JoystickAxisTrigger(
+            JoystickAxis joystickAxis, double threshold, ThresholdType thresholdType) {
         super(
                 () -> {
-                    double input = joystick.getRawAxis(axis) * (invert ? -1 : 1);
+                    double val = joystickAxis.get();
                     switch (thresholdType) {
                         case Exact:
-                            return input == threshold;
+                            return val == threshold;
                         case LessThan:
-                            return input < threshold;
+                            return val < threshold;
                         case GreaterThan:
-                            return input > threshold;
+                            return val > threshold;
                         case Deadband:
-                            return Math.abs(input) > threshold;
+                            return Math.abs(val) > threshold;
                         default:
                             return false;
                     }
                 });
-
-        mJoystick = joystick;
-        mAxis = axis;
-        mInverted = invert;
+        mJoystickAxis = joystickAxis;
+        mThreshold = threshold;
+        mThresholdType = thresholdType;
     }
 
     /** @return The axis value without inversion. */
-    public double getRawValue() {
-        return mJoystick.getRawAxis(mAxis);
-    }
-
-    /**
-     * @return The axis value with inversion.
-     *     <p>Note: If inversion was set to false, this method returns {@link #getRawValue()}.
-     */
-    public double getValue() {
-        return getRawValue() * (mInverted ? -1 : 1);
+    public double getRaw() {
+        return mJoystickAxis.get();
     }
 
     /**
@@ -104,15 +103,22 @@ public class JoystickAxisTrigger extends Trigger {
      *
      * <p>{@link JoystickUtil#deadband(double, double)} the value by .075.
      *
+     * <p>{@link JoystickUtil#ramp(double, double)} the value by 3.
+     *
      * <p>{@link JoystickUtil#clamp(double, double, double)} the value [-1, 1].
      *
      * @return A cleansed joystick input.
      */
-    public double getCleanValue() {
-        double value = getValue();
+    public double getVal() {
+        double value = getRaw();
         value = JoystickUtil.deadband(value, .075);
+        value = JoystickUtil.ramp(value, 3);
         value = JoystickUtil.clamp(value, -1, 1);
         return value;
+    }
+
+    public void clean(Function<Double, Double> cleaningFunction) {
+        mJoystickAxis.setCleaner(cleaningFunction);
     }
 
     /**
@@ -121,12 +127,17 @@ public class JoystickAxisTrigger extends Trigger {
      *
      * @param thresholdType The new {@link ThresholdType}.
      * @param threshold The new threshold.
-     * @param invert Whether to invert the new {@link JoystickAxisTrigger} from this one.
      * @return A {@link JoystickAxisTrigger} with a new threshold.
      */
-    public JoystickAxisTrigger withThreshold(
-            ThresholdType thresholdType, double threshold, boolean invert) {
-        return new JoystickAxisTrigger(
-                mJoystick, mAxis, threshold, thresholdType, invert ^ mInverted);
+    public JoystickAxisTrigger withThreshold(ThresholdType thresholdType, double threshold) {
+        return new JoystickAxisTrigger(mJoystickAxis, threshold, thresholdType);
+    }
+
+    @Override
+    public void initSendable(SendableBuilder builder) {
+        super.initSendable(builder);
+        mJoystickAxis.initSendable(builder);
+        builder.addDoubleProperty("Threshold", () -> mThreshold, null);
+        builder.addStringProperty("ThresholdType", () -> mThresholdType.name(), null);
     }
 }

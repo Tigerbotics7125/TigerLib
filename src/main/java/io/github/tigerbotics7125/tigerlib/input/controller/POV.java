@@ -3,9 +3,9 @@
  * This work is licensed under the terms of the GNU GPLv3 license
  * found in the root directory of this project.
  */
-package io.github.tigerbotics7125.tigerlib.input.oi;
+package io.github.tigerbotics7125.tigerlib.input.controller;
 
-import io.github.tigerbotics7125.tigerlib.input.JoystickPOVTrigger;
+import io.github.tigerbotics7125.tigerlib.input.trigger.JoystickPOVTrigger;
 
 import edu.wpi.first.wpilibj.GenericHID;
 

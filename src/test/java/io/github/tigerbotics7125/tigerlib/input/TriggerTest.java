@@ -5,15 +5,17 @@
  */
 package io.github.tigerbotics7125.tigerlib.input;
 
-import static io.github.tigerbotics7125.tigerlib.input.Trigger.ActivationCondition.ON_FALLING;
-import static io.github.tigerbotics7125.tigerlib.input.Trigger.ActivationCondition.ON_RISING;
-import static io.github.tigerbotics7125.tigerlib.input.Trigger.ActivationCondition.ON_TRANSITION;
-import static io.github.tigerbotics7125.tigerlib.input.Trigger.ActivationCondition.WHILE_HIGH;
-import static io.github.tigerbotics7125.tigerlib.input.Trigger.ActivationCondition.WHILE_LOW;
+import static io.github.tigerbotics7125.tigerlib.input.trigger.Trigger.ActivationCondition.ON_FALLING;
+import static io.github.tigerbotics7125.tigerlib.input.trigger.Trigger.ActivationCondition.ON_RISING;
+import static io.github.tigerbotics7125.tigerlib.input.trigger.Trigger.ActivationCondition.ON_TRANSITION;
+import static io.github.tigerbotics7125.tigerlib.input.trigger.Trigger.ActivationCondition.WHILE_HIGH;
+import static io.github.tigerbotics7125.tigerlib.input.trigger.Trigger.ActivationCondition.WHILE_LOW;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import io.github.tigerbotics7125.tigerlib.TigerLib;
+import io.github.tigerbotics7125.tigerlib.input.trigger.Trigger;
+import io.github.tigerbotics7125.tigerlib.input.trigger.TriggerGroup;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.simulation.DriverStationSim;
@@ -124,24 +126,43 @@ public class TriggerTest {
 
     @Test
     public void compositionTest() {
-        Trigger t = new Trigger(() -> false);
-        Trigger t2 = new Trigger(() -> true);
+        Trigger f = new Trigger(() -> false).activate(WHILE_HIGH);
+        Trigger t = new Trigger(() -> true).activate(WHILE_HIGH);
 
-        assertFalse(t.and(t2).get());
-        assertTrue(t.nand(t2).get());
-        assertTrue(t.or(t2).get());
-        assertTrue(t.xor(t2).get());
-        assertFalse(t.nor(t2).get());
-        assertFalse(t.xnor(t2).get());
-        assertTrue(t.not().get());
-        assertFalse(t2.not().get());
+        assertFalse(f.get());
+        assertTrue(t.get());
+
+        assertFalse(f.and(t).get());
+        assertTrue(f.nand(t).get());
+        assertTrue(f.or(t).get());
+        assertTrue(f.xor(t).get());
+        assertFalse(f.nor(t).get());
+        assertFalse(f.xnor(t).get());
+        assertTrue(f.not().get());
+        assertFalse(t.not().get());
+    }
+
+    @Test
+    public void debounceTest() throws InterruptedException {
+        b = false;
+        Trigger t = new Trigger(bool).debounce(.01); // 10 ms
+
+        assertFalse(t.get());
+
+        b = true;
+
+        assertFalse(t.get());
+
+        Thread.sleep(11);
+
+        assertTrue(t.get());
     }
 
     /** This is also the TriggerGroup test. */
     @Test
     public void cancelCommandOnDisable() {
         b = true;
-        Trigger t = new Trigger(bool);
+        Trigger t = new Trigger(bool).activate(WHILE_HIGH);
         TriggerGroup tg = new TriggerGroup();
         Command c = new RunCommand(() -> {});
 
