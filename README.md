@@ -1,5 +1,7 @@
 <!-- Jitpack, Build workflow, Test workflow -->
-[![](https://jitpack.io/v/Tigerbotics7125/tigerlib.svg)](https://jitpack.io/#Tigerbotics7125/tigerlib) [![Build TigerLib](https://github.com/Tigerbotics7125/TigerLib/actions/workflows/Build.yaml/badge.svg?branch=main)](https://github.com/Tigerbotics7125/TigerLib/actions/workflows/Build.yaml) [![CI/CD](https://github.com/Tigerbotics7125/TigerLib/actions/workflows/CI-CD.yaml/badge.svg?branch=main)](https://github.com/Tigerbotics7125/TigerLib/actions/workflows/CI-CD.yaml)
+[![](https://jitpack.io/v/Tigerbotics7125/tigerlib.svg)](https://jitpack.io/#Tigerbotics7125/tigerlib)
+[![Build TigerLib](https://github.com/Tigerbotics7125/TigerLib/actions/workflows/Build.yaml/badge.svg?branch=main)](https://github.com/Tigerbotics7125/TigerLib/actions/workflows/Build.yaml)
+[![CI/CD](https://github.com/Tigerbotics7125/TigerLib/actions/workflows/CI-CD.yaml/badge.svg?branch=main)](https://github.com/Tigerbotics7125/TigerLib/actions/workflows/CI-CD.yaml)
 
 ---
 
@@ -18,7 +20,8 @@ allprojects {
 ```
 
 1. Add the dependency to your `build.gradle` file.
-> [![](https://jitpack.io/v/Tigerbotics7125/tigerlib.svg)](https://jitpack.io/#Tigerbotics7125/tigerlib)
+> [![GitHub release (latest SemVer)](https://img.shields.io/github/v/release/tigerbotics7125/tigerlib?color=00aaff&label=Latest%3A)](https://github.com/Tigerbotics7125/TigerLib/releases)
+> [![GitHub release (latest SemVer including pre-releases)](https://img.shields.io/github/v/release/tigerbotics7125/tigerlib?color=ffff00&include_prereleases&label=pre-release%3A)](https://github.com/Tigerbotics7125/TigerLib/releases)
 ```groovy
 dependencies {
     // check tag above for most recent version
