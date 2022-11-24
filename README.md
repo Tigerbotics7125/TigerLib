@@ -49,7 +49,7 @@ All changes need to be commited [atomicly](https://www.freshconsulting.com/insig
 ## Acknowledgments
 [![Lines of code](https://img.shields.io/tokei/lines/github/tigerbotics7125/TigerLib?style=plastic)](#)
 * ***In numerical order:***
-* StuyPulse 624 - Conversion class.
+* StuyPulse 694 - Conversion class.
 * Spectrum 3847 - Some OI concepts.
 
 [![Contributors](https://contrib.rocks/image?repo=Tigerbotics7125/TigerLib)](https://github.com/Tigerbotics7125/TigerLib/graphs/contributors)
