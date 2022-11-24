@@ -5,13 +5,14 @@
  */
 package io.github.tigerbotics7125.tigerlib.input.controller;
 
-import java.util.EnumMap;
+import io.github.tigerbotics7125.tigerlib.input.joystick.JoystickAxis;
+import io.github.tigerbotics7125.tigerlib.input.trigger.JoystickTrigger;
 
 import edu.wpi.first.hal.FRCNetComm.tResourceType;
 import edu.wpi.first.hal.HAL;
 import edu.wpi.first.wpilibj.GenericHID;
-import io.github.tigerbotics7125.tigerlib.input.joystick.JoystickAxis;
-import io.github.tigerbotics7125.tigerlib.input.trigger.JoystickTrigger;
+
+import java.util.EnumMap;
 
 /**
  * An input wrapper for the Xbox controller.
@@ -89,8 +90,7 @@ public class XboxController extends GenericHID {
      * @param axis The Axis to build for.
      * @return The JoystickAxis.
      */
-    private JoystickAxis build(
-            XboxAxis axis, boolean inverted) {
+    private JoystickAxis build(XboxAxis axis, boolean inverted) {
         return new JoystickAxis(this, axis.value, inverted);
     }
 
@@ -152,8 +152,7 @@ public class XboxController extends GenericHID {
      * @return The left stick's x {@link JoystickAxis}
      */
     public JoystickAxis leftX() {
-        return mAxes.computeIfAbsent(
-                XboxAxis.LEFT_X, (axis) -> build(axis, false));
+        return mAxes.computeIfAbsent(XboxAxis.LEFT_X, (axis) -> build(axis, false));
     }
 
     /**
@@ -162,20 +161,17 @@ public class XboxController extends GenericHID {
      * @return The left stick's y {@link JoystickAxis}.
      */
     public JoystickAxis leftY() {
-        return mAxes.computeIfAbsent(
-                XboxAxis.LEFT_Y, (axis) -> build(axis, true));
+        return mAxes.computeIfAbsent(XboxAxis.LEFT_Y, (axis) -> build(axis, true));
     }
 
     /** @return The left trigger's {@link JoystickAxis}. */
     public JoystickAxis lt() {
-        return mAxes.computeIfAbsent(
-                XboxAxis.LT, (axis) -> build(axis, false));
+        return mAxes.computeIfAbsent(XboxAxis.LT, (axis) -> build(axis, false));
     }
 
     /** @return The right trigger's {@link JoystickAxis}. */
     public JoystickAxis rt() {
-        return mAxes.computeIfAbsent(
-                XboxAxis.RT, (axis) -> build(axis, false));
+        return mAxes.computeIfAbsent(XboxAxis.RT, (axis) -> build(axis, false));
     }
 
     /**
@@ -186,8 +182,7 @@ public class XboxController extends GenericHID {
      * @return The right stick's x {@link JoystickAxis}.
      */
     public JoystickAxis rightX() {
-        return mAxes.computeIfAbsent(
-                XboxAxis.RIGHT_X, (axis) -> build(axis, false));
+        return mAxes.computeIfAbsent(XboxAxis.RIGHT_X, (axis) -> build(axis, false));
     }
 
     /**
@@ -196,7 +191,6 @@ public class XboxController extends GenericHID {
      * @return The right stick's y {@link JoystickAxis}.
      */
     public JoystickAxis rightY() {
-        return mAxes.computeIfAbsent(
-                XboxAxis.RIGHT_Y, (axis) -> build(axis, true));
+        return mAxes.computeIfAbsent(XboxAxis.RIGHT_Y, (axis) -> build(axis, true));
     }
 }

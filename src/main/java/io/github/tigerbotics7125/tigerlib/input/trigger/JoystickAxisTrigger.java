@@ -5,12 +5,13 @@
  */
 package io.github.tigerbotics7125.tigerlib.input.trigger;
 
-import java.util.function.Function;
+import io.github.tigerbotics7125.tigerlib.input.joystick.JoystickAxis;
+import io.github.tigerbotics7125.tigerlib.util.JoystickUtil;
 
 import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.GenericHID;
-import io.github.tigerbotics7125.tigerlib.input.joystick.JoystickAxis;
-import io.github.tigerbotics7125.tigerlib.util.JoystickUtil;
+
+import java.util.function.Function;
 
 /**
  * A {@link Trigger} wrapper for axes.
@@ -19,34 +20,30 @@ import io.github.tigerbotics7125.tigerlib.util.JoystickUtil;
  * @author Spectrum 3847
  */
 public class JoystickAxisTrigger extends Trigger {
-    
+
     public enum ThresholdType {
         /**
          * Considers the input active if;
          *
-         * <p>
-         * The input equals the threshold.
+         * <p>The input equals the threshold.
          */
         Exact,
         /**
          * Considers the input active if:
          *
-         * <p>
-         * The input is less than the threshold.
+         * <p>The input is less than the threshold.
          */
         LessThan,
         /**
          * Considers the input active if:
          *
-         * <p>
-         * The input is greater than the threshold.
+         * <p>The input is greater than the threshold.
          */
         GreaterThan,
         /**
          * Considers the input active if:
          *
-         * <p>
-         * The aboslute value of the input is greater than the threshold.
+         * <p>The aboslute value of the input is greater than the threshold.
          */
         Deadband;
     }
@@ -57,7 +54,7 @@ public class JoystickAxisTrigger extends Trigger {
 
     /**
      * Create a new {@link JoystickAxisTrigger} Object.
-     * 
+     *
      * @param joystick The HID device to read the axis from.
      * @param axis The axis index to read from.
      * @param threshold The threshold to determine if the axis is pressed.
@@ -70,25 +67,27 @@ public class JoystickAxisTrigger extends Trigger {
             double threshold,
             ThresholdType thresholdType,
             boolean invert) {
-                this(new JoystickAxis(joystick, axis, invert), threshold, thresholdType);
+        this(new JoystickAxis(joystick, axis, invert), threshold, thresholdType);
     }
 
-    private JoystickAxisTrigger(JoystickAxis joystickAxis, double threshold, ThresholdType thresholdType) {
-        super(() -> {
-            double val = joystickAxis.get();
-            switch (thresholdType) {
-                case Exact:
-                    return val == threshold;
-                case LessThan:
-                    return val < threshold;
-                case GreaterThan:
-                    return val > threshold;
-                case Deadband:
-                    return Math.abs(val) > threshold;
-                default:
-                    return false;
-            }
-        });
+    private JoystickAxisTrigger(
+            JoystickAxis joystickAxis, double threshold, ThresholdType thresholdType) {
+        super(
+                () -> {
+                    double val = joystickAxis.get();
+                    switch (thresholdType) {
+                        case Exact:
+                            return val == threshold;
+                        case LessThan:
+                            return val < threshold;
+                        case GreaterThan:
+                            return val > threshold;
+                        case Deadband:
+                            return Math.abs(val) > threshold;
+                        default:
+                            return false;
+                    }
+                });
         mJoystickAxis = joystickAxis;
         mThreshold = threshold;
         mThresholdType = thresholdType;
@@ -102,14 +101,11 @@ public class JoystickAxisTrigger extends Trigger {
     /**
      * Unless overriden, the default implementation is to:
      *
-     * <p>
-     * {@link JoystickUtil#deadband(double, double)} the value by .075.
-     * 
-     * <p>
-     * {@link JoystickUtil#ramp(double, double)} the value by 3.
+     * <p>{@link JoystickUtil#deadband(double, double)} the value by .075.
      *
-     * <p>
-     * {@link JoystickUtil#clamp(double, double, double)} the value [-1, 1].
+     * <p>{@link JoystickUtil#ramp(double, double)} the value by 3.
+     *
+     * <p>{@link JoystickUtil#clamp(double, double, double)} the value [-1, 1].
      *
      * @return A cleansed joystick input.
      */
@@ -126,16 +122,14 @@ public class JoystickAxisTrigger extends Trigger {
     }
 
     /**
-     * Create a new {@link JoystickAxisTrigger} representing the same joystick axis,
-     * but with a
+     * Create a new {@link JoystickAxisTrigger} representing the same joystick axis, but with a
      * different threshold condition.
      *
      * @param thresholdType The new {@link ThresholdType}.
-     * @param threshold     The new threshold.
+     * @param threshold The new threshold.
      * @return A {@link JoystickAxisTrigger} with a new threshold.
      */
-    public JoystickAxisTrigger withThreshold(
-            ThresholdType thresholdType, double threshold) {
+    public JoystickAxisTrigger withThreshold(ThresholdType thresholdType, double threshold) {
         return new JoystickAxisTrigger(mJoystickAxis, threshold, thresholdType);
     }
 

@@ -16,7 +16,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import io.github.tigerbotics7125.tigerlib.TigerLib;
 import io.github.tigerbotics7125.tigerlib.input.trigger.Trigger;
 import io.github.tigerbotics7125.tigerlib.input.trigger.TriggerGroup;
-import io.github.tigerbotics7125.tigerlib.input.trigger.Trigger.ActivationCondition;
+
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.simulation.DriverStationSim;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -148,7 +148,7 @@ public class TriggerTest {
         Trigger t = new Trigger(bool).debounce(.01); // 10 ms
 
         assertFalse(t.get());
-        
+
         b = true;
 
         assertFalse(t.get());

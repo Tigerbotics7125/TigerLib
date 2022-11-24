@@ -6,8 +6,9 @@
 package io.github.tigerbotics7125.tigerlib.input.controller;
 
 import io.github.tigerbotics7125.tigerlib.input.trigger.JoystickAxisTrigger;
-import io.github.tigerbotics7125.tigerlib.input.trigger.JoystickTrigger;
 import io.github.tigerbotics7125.tigerlib.input.trigger.JoystickAxisTrigger.ThresholdType;
+import io.github.tigerbotics7125.tigerlib.input.trigger.JoystickTrigger;
+
 import edu.wpi.first.hal.FRCNetComm.tResourceType;
 import edu.wpi.first.hal.HAL;
 import edu.wpi.first.wpilibj.GenericHID;
