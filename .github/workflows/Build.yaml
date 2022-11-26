@@ -24,8 +24,8 @@ jobs:
 
       - name: Setup Gradle Wrapper
         run: |
-        chmod +x gradlew
-        ./gradlew clean
+          chmod +x gradlew
+          ./gradlew clean
 
       - name: Test
         run: ./gradlew test

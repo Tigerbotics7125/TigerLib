@@ -24,8 +24,8 @@ jobs:
 
       - name: Setup Gradle Wrapper
         run: |
-        chmod +x gradlew
-        ./gradlew clean
+          chmod +x gradlew
+          ./gradlew clean
 
       - name: Generate Javadocs
         run: ./gradlew javadoc -P"version=${{ github.event.release.tag_name }}"
