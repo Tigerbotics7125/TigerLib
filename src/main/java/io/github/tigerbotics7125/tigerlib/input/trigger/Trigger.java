@@ -101,20 +101,29 @@ public class Trigger implements BooleanSupplier, Sendable {
     /** @return The state of this {@link Trigger}. */
     public boolean get() {
         boolean state = getAsBoolean();
+        return switch (mActivation) {
+            case WHILE_LOW -> !state;
+            case WHILE_HIGH -> state;
+            case ON_FALLING -> !state && mLastState;
+            case ON_RISING -> state && !mLastState;
+            case ON_TRANSITION -> state != mLastState;
+        };
+        // Java 11
+        /*
         switch (mActivation) {
             case WHILE_LOW:
-                return !state;
+            return !state;
             case WHILE_HIGH:
-                return state;
+            return state;
             case ON_FALLING:
-                return !state && mLastState;
+            return !state && mLastState;
             case ON_RISING:
-                return state && !mLastState;
+            return state && !mLastState;
             case ON_TRANSITION:
-                return state != mLastState;
-        }
-        // mLastState = getAsBoolean();
-        return false;
+            return state != mLastState;
+           }
+        */
+        // return false;
     }
 
     public Trigger join(TriggerGroup triggerGroup) {
@@ -210,23 +219,31 @@ public class Trigger implements BooleanSupplier, Sendable {
      * @return A debounced {@link Trigger}.
      */
     public Trigger debounce(double debounceTimeSeconds) {
-        DebounceType t;
+        DebounceType t =
+                switch (mActivation) {
+                    case WHILE_LOW, WHILE_HIGH, ON_TRANSITION -> DebounceType.kBoth;
+                    case ON_FALLING -> DebounceType.kFalling;
+                    case ON_RISING -> DebounceType.kRising;
+                };
+        // Java 11
+        /*
         switch (mActivation) {
             case WHILE_LOW:
             case WHILE_HIGH:
             case ON_TRANSITION:
-                t = DebounceType.kBoth;
-                break;
+            t = DebounceType.kBoth;
+            break;
             case ON_FALLING:
-                t = DebounceType.kFalling;
-                break;
+            t = DebounceType.kFalling;
+            break;
             case ON_RISING:
-                t = DebounceType.kRising;
-                break;
+            t = DebounceType.kRising;
+            break;
             default:
-                t = DebounceType.kBoth;
-                break;
+            t = DebounceType.kBoth;
+            break;
         }
+        */
 
         Debouncer d = new Debouncer(debounceTimeSeconds, t);
         return new Trigger(() -> d.calculate(this.getAsBoolean()));

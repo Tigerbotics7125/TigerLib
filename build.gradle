@@ -2,11 +2,11 @@ plugins {
     id "java"
     id "maven-publish"
     id "edu.wpi.first.GradleRIO" version "2022.4.1"
-    id "com.diffplug.spotless" version "6.1.0"
+    id "com.diffplug.spotless" version "6.7.2"
 }
 
-sourceCompatibility = JavaVersion.VERSION_11
-targetCompatibility = JavaVersion.VERSION_11
+sourceCompatibility = JavaVersion.VERSION_17
+targetCompatibility = JavaVersion.VERSION_17
 
 wpi.java.debugJni = false;
 
@@ -62,7 +62,7 @@ spotless {
         }
         licenseHeaderFile 'LICENSE_SHORTHAND'
 
-        googleJavaFormat('1.8').aosp().reflowLongStrings()
+        googleJavaFormat('1.10.0').aosp().reflowLongStrings()
 
         trimTrailingWhitespace()
         endWithNewline()

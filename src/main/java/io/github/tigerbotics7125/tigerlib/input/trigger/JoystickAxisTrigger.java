@@ -75,18 +75,28 @@ public class JoystickAxisTrigger extends Trigger {
         super(
                 () -> {
                     double val = joystickAxis.get();
+                    return switch (thresholdType) {
+                        case Exact -> val == threshold;
+                        case LessThan -> val < threshold;
+                        case GreaterThan -> val > threshold;
+                        case Deadband -> Math.abs(val) > threshold;
+                        default -> false;
+                    };
+                    // Java 11
+                    /*
                     switch (thresholdType) {
                         case Exact:
-                            return val == threshold;
+                        return val == threshold;
                         case LessThan:
-                            return val < threshold;
+                        return val < threshold;
                         case GreaterThan:
-                            return val > threshold;
+                        return val > threshold;
                         case Deadband:
-                            return Math.abs(val) > threshold;
+                        return Math.abs(val) > threshold;
                         default:
-                            return false;
+                        return false;
                     }
+                    */
                 });
         mJoystickAxis = joystickAxis;
         mThreshold = threshold;
