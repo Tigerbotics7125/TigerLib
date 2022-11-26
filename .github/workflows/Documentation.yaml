@@ -22,10 +22,13 @@ jobs:
           java-version: '17'
           distribution: 'adopt'
 
-      - name: Generate Javadocs
+      - name: Setup Gradle Wrapper
         run: |
-          chmod +x gradlew
-          ./gradlew javadoc -P"version=${{ github.event.release.tag_name }}" -PenforceSpotless=false
+        chmod +x gradlew
+        ./gradlew clean
+
+      - name: Generate Javadocs
+        run: ./gradlew javadoc -P"version=${{ github.event.release.tag_name }}"
 
       - name: Deploy gh pages
         uses: peaceiris/actions-gh-pages@v3

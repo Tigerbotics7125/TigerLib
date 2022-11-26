@@ -1,20 +1,23 @@
-name: Build
+name: Lint
 
 on:
+  pull_request:
   push:
     branches-ignore:
       - main
-  pull_request:
   workflow_dispatch:
 
 jobs:
-  build-TigerLib:
-    runs-on: ubuntu-latest
+  lint:
     permissions:
-      contents: read
+      contents: write
+
+    runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v3
+        with:
+          ref: ${{ github.head_ref }}
 
       - name: Setup JDK
         uses: actions/setup-java@v3.6.0
@@ -27,8 +30,9 @@ jobs:
         chmod +x gradlew
         ./gradlew clean
 
-      - name: Test
-        run: ./gradlew test
+      - name: Lint
+        run: ./gradlew spotlessApply
 
-      - name: Build
-        run: ./gradlew build
+      - uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          commit_message: '[bot] Lint'
