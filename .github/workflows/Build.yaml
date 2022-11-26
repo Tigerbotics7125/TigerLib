@@ -25,6 +25,10 @@ jobs:
       - name: Setup Gradle Wrapper
         run: chmod +x gradlew
 
+      # Unnecessary but gets initial run dialog out of other steps.
+      - name: Clean
+        run: ./gradlew clean
+
       - name: Lint
         run: ./gradlew spotlessCheck
 
