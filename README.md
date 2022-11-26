@@ -1,7 +1,8 @@
-<!-- Jitpack, Build workflow, Test workflow -->
+[![Build](https://github.com/Tigerbotics7125/TigerLib/actions/workflows/Build.yaml/badge.svg)](https://github.com/Tigerbotics7125/TigerLib/actions/workflows/Build.yaml)
+[![Lint](https://github.com/Tigerbotics7125/TigerLib/actions/workflows/Lint.yaml/badge.svg)](https://github.com/Tigerbotics7125/TigerLib/actions/workflows/Lint.yaml)
+[![Publish Documentation](https://github.com/Tigerbotics7125/TigerLib/actions/workflows/Documentation.yaml/badge.svg)](https://github.com/Tigerbotics7125/TigerLib/actions/workflows/Documentation.yaml)
+
 [![](https://jitpack.io/v/Tigerbotics7125/tigerlib.svg)](https://jitpack.io/#Tigerbotics7125/tigerlib)
-[![Build TigerLib](https://github.com/Tigerbotics7125/TigerLib/actions/workflows/Build.yaml/badge.svg?branch=main)](https://github.com/Tigerbotics7125/TigerLib/actions/workflows/Build.yaml)
-[![CI/CD](https://github.com/Tigerbotics7125/TigerLib/actions/workflows/CI-CD.yaml/badge.svg?branch=main)](https://github.com/Tigerbotics7125/TigerLib/actions/workflows/CI-CD.yaml)
 
 ---
 
