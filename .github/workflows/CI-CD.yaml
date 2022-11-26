@@ -8,25 +8,6 @@ on:
   workflow_dispatch:
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-
-    steps:
-      - uses: actions/checkout@v2
-
-      - name: Set up JDK 17
-        uses: actions/setup-java@v2
-        with:
-          java-version: '17'
-          distribution: 'adopt'
-
-      - name: Build project
-        run: |
-          chmod +x gradlew
-          ./gradlew build -PenforceSpotless=false
-
   deploy-gh-pages:
     runs-on: ubuntu-latest
     needs: build
@@ -45,7 +26,7 @@ jobs:
       - name: Generate Javadocs
         run: |
           chmod +x gradlew
-          ./gradlew javadoc -P"version=${{ github.event.release.tag_name }}"
+          ./gradlew javadoc -P"version=${{ github.event.release.tag_name }}" -PenforceSpotless=false
 
       - name: Deploy gh pages
         uses: peaceiris/actions-gh-pages@v3

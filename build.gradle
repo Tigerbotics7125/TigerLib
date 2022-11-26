@@ -26,10 +26,6 @@ dependencies {
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
 }
 
-javadoc {
-    failOnError = false;
-}
-
 group = 'io.github.tigerbotics7125'
 
 publishing {
@@ -46,7 +42,6 @@ publishing {
 wpi.java.configureTestTasks(test)
 test {
     useJUnitPlatform()
-    ignoreFailures = true;
 }
 
 spotless {
