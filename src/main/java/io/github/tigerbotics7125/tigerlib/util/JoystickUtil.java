@@ -60,79 +60,15 @@ public class JoystickUtil {
     }
 
     /**
-     * Converts the typical joystick "diamond" which is a square rotated 45 degrees with lines going
-     * from (0,1) to (1, 0) and so forth for the other quadrents, to a square which spans (-1, -1)
-     * to (1, 1).
+     * Convert joystick values to magnitude and angle values.
      *
-     * @param input Original joystick input [-1, 1].
-     * @return A Pair object with the converted input.
+     * @param x input
+     * @param y input
+     * @return A pair of outputs, (x, y).
      */
-    public static Pair<Double, Double> mapToSquare(Pair<Double, Double> input) {
-        double x = input.getFirst();
-        double y = input.getSecond();
-
-        // get the quadrent the joystick is in currently
-        int quadrent = 1;
-        if (x > 0 && y > 0) quadrent = 1;
-        else if (x < 0 && y > 0) quadrent = 2;
-        else if (x < 0 && y < 0) quadrent = 3;
-        else if (x > 0 && y < 0) quadrent = 4;
-
-        // Convert joystick diamond to [(-1, -1), (1, 1)] square.
-        return switch (quadrent) {
-            case 1 -> {
-                double a = 1;
-                double b = 1;
-                double c = -1;
-                double d =
-                        Math.abs((a * x) + (b * y) - c)
-                                / Math.sqrt(Math.pow(a, 2) + Math.pow(b, 2));
-
-                double x2 = x / (d + x);
-                double y2 = y / (d + y);
-
-                yield Pair.of(x2, y2);
-            }
-            case 2 -> {
-                double a = 1;
-                double b = -1;
-                double c = 1;
-                double d =
-                        Math.abs((a * x) + (b * y) - c)
-                                / Math.sqrt(Math.pow(a, 2) + Math.pow(b, 2));
-
-                double x2 = x / (d - x);
-                double y2 = y / (d + y);
-
-                yield Pair.of(x2, y2);
-            }
-            case 3 -> {
-                double a = 1;
-                double b = 1;
-                double c = 1;
-                double d =
-                        Math.abs((a * x) + (b * y) - c)
-                                / Math.sqrt(Math.pow(a, 2) + Math.pow(b, 2));
-
-                double x2 = x / (d - x);
-                double y2 = y / (d - y);
-
-                yield Pair.of(x2, y2);
-            }
-            case 4 -> {
-                double a = -1;
-                double b = 1;
-                double c = 1;
-                double d =
-                        Math.abs((a * x) + (b * y) - c)
-                                / Math.sqrt(Math.pow(a, 2) + Math.pow(b, 2));
-
-                double x2 = x / (d - x);
-                double y2 = y / (d + y);
-
-                yield Pair.of(x2, y2);
-            }
-            default -> Pair.of(0.0, 0.0);
-        };
+    public static Pair<Double, Double> mapToCircle(double x, double y) {
+        double alpha = Math.atan2(y, x);
+        double magnitude = Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2));
+        return Pair.of(magnitude * Math.cos(alpha), magnitude * Math.sin(alpha));
     }
 }
