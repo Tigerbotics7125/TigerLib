@@ -147,12 +147,10 @@ public class XboxController extends GenericHID {
     /**
      * East is considered positive.
      *
-     * <p>Note: This axis is inverted.
-     *
      * @return The left stick's x {@link JoystickAxis}
      */
     public JoystickAxis leftX() {
-        return mAxes.computeIfAbsent(XboxAxis.LEFT_X, (axis) -> build(axis, false));
+        return mAxes.computeIfAbsent(XboxAxis.LEFT_X, (axis) -> build(axis, true));
     }
 
     /**
@@ -177,12 +175,10 @@ public class XboxController extends GenericHID {
     /**
      * East is considered positive.
      *
-     * <p>Note: This axis is inverted.
-     *
      * @return The right stick's x {@link JoystickAxis}.
      */
     public JoystickAxis rightX() {
-        return mAxes.computeIfAbsent(XboxAxis.RIGHT_X, (axis) -> build(axis, false));
+        return mAxes.computeIfAbsent(XboxAxis.RIGHT_X, (axis) -> build(axis, true));
     }
 
     /**
