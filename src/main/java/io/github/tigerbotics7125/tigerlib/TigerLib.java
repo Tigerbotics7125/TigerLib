@@ -5,8 +5,6 @@
  */
 package io.github.tigerbotics7125.tigerlib;
 
-import io.github.tigerbotics7125.tigerlib.input.trigger.Trigger;
-
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 
 /**
@@ -23,8 +21,6 @@ public final class TigerLib {
 
     /** Library periodic calls. */
     public static void periodic() {
-        Trigger.periodic();
-
         // Scheduler is here to simplify user code.
         CommandScheduler.getInstance().run();
     }

@@ -13,10 +13,9 @@ import edu.wpi.first.util.sendable.Sendable;
 import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import edu.wpi.first.wpilibj2.command.RunCommand;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.function.BooleanSupplier;
 
@@ -33,39 +32,34 @@ import java.util.function.BooleanSupplier;
  */
 public class Trigger implements BooleanSupplier, Sendable {
 
-    // The List of Triggers created, used to iterate and check values periodically.
-    private static List<Trigger> mTriggers = new LinkedList<>();
-
-    /**
-     * Static call to update all {@link Trigger} Objects.
-     *
-     * <p>The user should either call this function or {@link TigerLib#periodic()} in their robot's
-     * periodic function.
-     */
-    public static void periodic() {
-        // update last state so that transition conditions work properly.
-        mTriggers.forEach((t) -> t.mLastState = t.getAsBoolean());
-    }
-
     /**
      * Activation conditions for a {@link Trigger}.
      *
      * <p>These values are representative of different ways a circuit could change its state.
      */
     public enum ActivationCondition {
-        WHILE_LOW,
-        WHILE_HIGH,
-        ON_FALLING,
-        ON_RISING,
-        ON_TRANSITION,
+        WHILE_LOW(0),
+        WHILE_HIGH(1),
+        ON_FALLING(2),
+        ON_RISING(3),
         ;
+
+        private final int mType;
+
+        private ActivationCondition(int type) {
+            mType = type;
+        }
+
+        public boolean isWhile() {
+            if (mType == WHILE_LOW.mType || mType == WHILE_HIGH.mType) return true;
+            else return false;
+        }
     }
 
     private final BooleanSupplier mInput;
     private final ActivationCondition mActivation;
     private final List<Command> mCommands;
     private boolean mEnabled;
-    public boolean mLastState;
 
     /**
      * Create a new {@link Trigger} Object.
@@ -80,8 +74,6 @@ public class Trigger implements BooleanSupplier, Sendable {
         mActivation = activateOn;
         mCommands = new ArrayList<>();
         mEnabled = true;
-        mLastState = mInput.getAsBoolean();
-        mTriggers.add(this);
     }
 
     /**
@@ -95,35 +87,12 @@ public class Trigger implements BooleanSupplier, Sendable {
 
     /** @return The input to this {@link Trigger}. */
     public boolean getAsBoolean() {
-        return mInput.getAsBoolean();
+        return get();
     }
 
     /** @return The state of this {@link Trigger}. */
     public boolean get() {
-        boolean state = getAsBoolean();
-        return switch (mActivation) {
-            case WHILE_LOW -> !state;
-            case WHILE_HIGH -> state;
-            case ON_FALLING -> !state && mLastState;
-            case ON_RISING -> state && !mLastState;
-            case ON_TRANSITION -> state != mLastState;
-        };
-        // Java 11
-        /*
-        switch (mActivation) {
-            case WHILE_LOW:
-            return !state;
-            case WHILE_HIGH:
-            return state;
-            case ON_FALLING:
-            return !state && mLastState;
-            case ON_RISING:
-            return state && !mLastState;
-            case ON_TRANSITION:
-            return state != mLastState;
-           }
-        */
-        // return false;
+        return mInput.getAsBoolean();
     }
 
     public Trigger join(TriggerGroup triggerGroup) {
@@ -137,7 +106,7 @@ public class Trigger implements BooleanSupplier, Sendable {
     }
 
     public Trigger trigger(Runnable toRun) {
-        return trigger(new RunCommand(toRun));
+        return trigger(new InstantCommand(toRun));
     }
 
     /**
@@ -147,22 +116,32 @@ public class Trigger implements BooleanSupplier, Sendable {
      * @return This {@link Trigger} for chaining methods.
      */
     public Trigger trigger(Command cmd) {
-        mCommands.add(cmd);
-        // add command to scheduler.
         CommandScheduler.getInstance()
                 .addButton(
-                        () -> {
-                            // Cancel "WHILE" commands when trigger becomes inactive.
-                            if (cmd.isScheduled()
-                                    && !get()
-                                    && (mActivation == ActivationCondition.WHILE_LOW
-                                            || mActivation == ActivationCondition.WHILE_HIGH)) {
-                                cmd.cancel();
-                            } else {
-                                // Schedule commands.
-                                if (mEnabled && get()) cmd.schedule();
+                        new Runnable() {
+                            private boolean mLastState = get();
+
+                            @Override
+                            public void run() {
+                                boolean state = get();
+                                boolean toActivate =
+                                        switch (mActivation) {
+                                            case WHILE_LOW -> !state;
+                                            case WHILE_HIGH -> state;
+                                            case ON_FALLING -> !state && mLastState;
+                                            case ON_RISING -> state && !mLastState;
+                                        };
+
+                                if (toActivate && mEnabled && !cmd.isScheduled()) cmd.schedule();
+                                // cancel "while" commands when they should no longer be active.
+                                else if (!toActivate && cmd.isScheduled() && mActivation.isWhile())
+                                    cmd.cancel();
+
+                                mLastState = state;
                             }
                         });
+
+        mCommands.add(cmd);
         return this;
     }
 
@@ -221,7 +200,7 @@ public class Trigger implements BooleanSupplier, Sendable {
     public Trigger debounce(double debounceTimeSeconds) {
         DebounceType t =
                 switch (mActivation) {
-                    case WHILE_LOW, WHILE_HIGH, ON_TRANSITION -> DebounceType.kBoth;
+                    case WHILE_LOW, WHILE_HIGH -> DebounceType.kBoth;
                     case ON_FALLING -> DebounceType.kFalling;
                     case ON_RISING -> DebounceType.kRising;
                 };
