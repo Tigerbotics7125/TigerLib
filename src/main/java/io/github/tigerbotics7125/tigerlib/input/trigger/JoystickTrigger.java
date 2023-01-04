@@ -16,9 +16,9 @@ public class JoystickTrigger extends Trigger {
 
     /**
      * @param joystick The HID device to read the button from.
-     * @param button The button index to read from.
+     * @param button   The button index to read from.
      */
     public JoystickTrigger(GenericHID joystick, int button) {
-        super(() -> joystick.getRawButton(button));
+	super(() -> joystick.getRawButton(button));
     }
 }

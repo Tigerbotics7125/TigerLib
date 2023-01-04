@@ -56,14 +56,9 @@ spotless {
             exclude '**/build/**', '**/build-*/**'
         }
         licenseHeaderFile 'LICENSE_SHORTHAND'
-
-        googleJavaFormat('1.10.0').aosp().reflowLongStrings()
-
-        trimTrailingWhitespace()
-        endWithNewline()
-
         importOrder('\\#', 'io.github.tigerbotics7125.tigerLib', 'io.github.tigerbotics7125', 'edu.wpi', '')
         removeUnusedImports()
+        eclipse().configFile('java-formatter.xml')
     }
     groovyGradle {
         target fileTree('.') {

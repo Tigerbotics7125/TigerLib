@@ -29,186 +29,193 @@ public class TriggerTest {
 
     @BeforeEach
     public void setup() {
-        CommandScheduler.getInstance().cancelAll();
-        CommandScheduler.getInstance().enable();
-        CommandScheduler.getInstance().clearButtons();
-        setDSEnable(true);
+	CommandScheduler.getInstance().cancelAll();
+	CommandScheduler.getInstance().enable();
+	CommandScheduler.getInstance().clearButtons();
+	setDSEnable(true);
     }
 
     public void setDSEnable(boolean enabled) {
-        DriverStationSim.setDsAttached(true);
+	DriverStationSim.setDsAttached(true);
 
-        DriverStationSim.setEnabled(true);
-        DriverStationSim.notifyNewData();
-        while (DriverStation.isEnabled() != enabled) {
-            try {
-                Thread.sleep(1);
-            } catch (InterruptedException ie) {
-                ie.printStackTrace();
-            }
-        }
+	DriverStationSim.setEnabled(true);
+	DriverStationSim.notifyNewData();
+	while (DriverStation.isEnabled() != enabled) {
+	    try {
+		Thread.sleep(1);
+	    } catch (InterruptedException ie) {
+		ie.printStackTrace();
+	    }
+	}
     }
 
     @Test
     public void whileLowTest() {
-        Trigger t = new Trigger(bool).activate(WHILE_LOW);
-        Command c = new RunCommand(() -> {});
-        t.trigger(c);
+	Trigger t = new Trigger(bool).activate(WHILE_LOW);
+	Command c = new RunCommand(() -> {
+	});
+	t.trigger(c);
 
-        // not on when expected.
-        b = true;
-        TigerLib.periodic();
-        assertFalse(c.isScheduled());
+	// not on when expected.
+	b = true;
+	TigerLib.periodic();
+	assertFalse(c.isScheduled());
 
-        // on when expected.
-        b = false;
-        TigerLib.periodic();
-        assertTrue(c.isScheduled());
+	// on when expected.
+	b = false;
+	TigerLib.periodic();
+	assertTrue(c.isScheduled());
 
-        // cancels when expected.
-        b = true;
-        TigerLib.periodic();
-        assertFalse(c.isScheduled());
+	// cancels when expected.
+	b = true;
+	TigerLib.periodic();
+	assertFalse(c.isScheduled());
     }
 
     @Test
     public void whileHighTest() {
-        Trigger t = new Trigger(bool).activate(WHILE_HIGH);
-        Command c = new RunCommand(() -> {});
-        t.trigger(c);
+	Trigger t = new Trigger(bool).activate(WHILE_HIGH);
+	Command c = new RunCommand(() -> {
+	});
+	t.trigger(c);
 
-        // not on when expected.
-        b = false;
-        TigerLib.periodic();
-        assertFalse(c.isScheduled());
+	// not on when expected.
+	b = false;
+	TigerLib.periodic();
+	assertFalse(c.isScheduled());
 
-        // on when expected.
-        b = true;
-        TigerLib.periodic();
-        assertTrue(c.isScheduled());
+	// on when expected.
+	b = true;
+	TigerLib.periodic();
+	assertTrue(c.isScheduled());
 
-        // cancel when expected.
-        b = false;
-        TigerLib.periodic();
-        assertFalse(c.isScheduled());
+	// cancel when expected.
+	b = false;
+	TigerLib.periodic();
+	assertFalse(c.isScheduled());
     }
 
     @Test
     public void onFallingTest() {
-        b = false;
-        Trigger t = new Trigger(bool).activate(ON_FALLING);
-        Command c = new RunCommand(() -> {}).perpetually();
-        t.trigger(c);
+	b = false;
+	Trigger t = new Trigger(bool).activate(ON_FALLING);
+	Command c = new RunCommand(() -> {
+	}).perpetually();
+	t.trigger(c);
 
-        // not on when expected.
-        b = false;
-        TigerLib.periodic();
-        assertFalse(c.isScheduled());
+	// not on when expected.
+	b = false;
+	TigerLib.periodic();
+	assertFalse(c.isScheduled());
 
-        b = true;
-        TigerLib.periodic();
-        assertFalse(c.isScheduled());
+	b = true;
+	TigerLib.periodic();
+	assertFalse(c.isScheduled());
 
-        // on when expected.
-        b = false;
-        TigerLib.periodic();
-        assertTrue(c.isScheduled());
+	// on when expected.
+	b = false;
+	TigerLib.periodic();
+	assertTrue(c.isScheduled());
 
-        // does not cancel, as expected
-        b = true;
-        TigerLib.periodic();
-        assertTrue(c.isScheduled());
+	// does not cancel, as expected
+	b = true;
+	TigerLib.periodic();
+	assertTrue(c.isScheduled());
     }
 
     @Test
     public void onRisingTest() {
-        b = true;
-        Trigger t = new Trigger(bool).activate(ON_RISING);
-        Command c = new RunCommand(() -> {}).perpetually();
-        t.trigger(c);
+	b = true;
+	Trigger t = new Trigger(bool).activate(ON_RISING);
+	Command c = new RunCommand(() -> {
+	}).perpetually();
+	t.trigger(c);
 
-        // not on when expected.
-        b = true;
-        TigerLib.periodic();
-        assertFalse(c.isScheduled());
+	// not on when expected.
+	b = true;
+	TigerLib.periodic();
+	assertFalse(c.isScheduled());
 
-        b = false;
-        TigerLib.periodic();
-        assertFalse(c.isScheduled());
+	b = false;
+	TigerLib.periodic();
+	assertFalse(c.isScheduled());
 
-        // on when expected.
-        b = true;
-        TigerLib.periodic();
-        assertTrue(c.isScheduled());
+	// on when expected.
+	b = true;
+	TigerLib.periodic();
+	assertTrue(c.isScheduled());
 
-        // does not cancel, as expected
-        b = false;
-        TigerLib.periodic();
-        assertTrue(c.isScheduled());
+	// does not cancel, as expected
+	b = false;
+	TigerLib.periodic();
+	assertTrue(c.isScheduled());
     }
 
     @Test
     public void compositionTest() {
-        Trigger f = new Trigger(() -> false).activate(WHILE_HIGH);
-        Trigger t = new Trigger(() -> true).activate(WHILE_HIGH);
+	Trigger f = new Trigger(() -> false).activate(WHILE_HIGH);
+	Trigger t = new Trigger(() -> true).activate(WHILE_HIGH);
 
-        assertFalse(f.get());
-        assertTrue(t.get());
+	assertFalse(f.get());
+	assertTrue(t.get());
 
-        assertFalse(f.and(t).get());
-        assertTrue(f.nand(t).get());
-        assertTrue(f.or(t).get());
-        assertTrue(f.xor(t).get());
-        assertFalse(f.nor(t).get());
-        assertFalse(f.xnor(t).get());
-        assertTrue(f.not().get());
-        assertFalse(t.not().get());
+	assertFalse(f.and(t).get());
+	assertTrue(f.nand(t).get());
+	assertTrue(f.or(t).get());
+	assertTrue(f.xor(t).get());
+	assertFalse(f.nor(t).get());
+	assertFalse(f.xnor(t).get());
+	assertTrue(f.not().get());
+	assertFalse(t.not().get());
     }
 
     @Test
     public void debounceTest() throws InterruptedException {
-        b = false;
-        Trigger t = new Trigger(bool).debounce(.01); // 10 ms
+	b = false;
+	Trigger t = new Trigger(bool).debounce(.01); // 10 ms
 
-        assertFalse(t.get());
+	assertFalse(t.get());
 
-        b = true;
+	b = true;
 
-        assertFalse(t.get());
+	assertFalse(t.get());
 
-        Thread.sleep(11);
+	Thread.sleep(11);
 
-        assertTrue(t.get());
+	assertTrue(t.get());
     }
 
     /** This is also the TriggerGroup test. */
     @Test
     public void cancelCommandOnDisable() {
-        b = true;
-        Trigger t = new Trigger(bool).activate(WHILE_HIGH);
-        TriggerGroup tg = new TriggerGroup();
-        Command c = new RunCommand(() -> {});
+	b = true;
+	Trigger t = new Trigger(bool).activate(WHILE_HIGH);
+	TriggerGroup tg = new TriggerGroup();
+	Command c = new RunCommand(() -> {
+	});
 
-        t.trigger(c).join(tg);
-        TigerLib.periodic();
+	t.trigger(c).join(tg);
+	TigerLib.periodic();
 
-        assertTrue(c.isScheduled());
+	assertTrue(c.isScheduled());
 
-        // disabled commands should immediately cancel any commands they are triggering.
-        t.disable();
-        assertFalse(c.isScheduled());
+	// disabled commands should immediately cancel any commands they are
+	// triggering.
+	t.disable();
+	assertFalse(c.isScheduled());
 
-        // re enable
-        t.enable();
-        TigerLib.periodic();
-        assertTrue(c.isScheduled());
+	// re enable
+	t.enable();
+	TigerLib.periodic();
+	assertTrue(c.isScheduled());
 
-        // disabled trigger groups should disable all triggers, consequentially caneling commands.
-        tg.disable();
-        assertFalse(c.isScheduled());
+	// disabled trigger groups should disable all triggers, consequentially
+	// caneling commands.
+	tg.disable();
+	assertFalse(c.isScheduled());
 
-        tg.enable();
-        TigerLib.periodic();
-        assertTrue(c.isScheduled());
+	tg.enable();
+	TigerLib.periodic();
+	assertTrue(c.isScheduled());
     }
 }
