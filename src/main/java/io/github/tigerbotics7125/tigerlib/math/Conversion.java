@@ -9,9 +9,9 @@ import java.util.function.Function;
 
 /**
  * Represent a conversion factor from any measurement to another.
- *
- * <p>For instance you can have a {@code Conversion<Integer, Double>} which could convert between
- * encoder counts and degrees.
+ * <p>
+ * For instance you can have a {@code Conversion<Integer, Double>} which could
+ * convert between encoder counts and degrees.
  *
  * @author Jeffrey Morris | Tigerbotics 7125
  * @author Myles Pasetsky | StuyPulse 694
@@ -21,23 +21,23 @@ public interface Conversion<From, To> {
     /**
      * Create a {@link Conversion} object.
      *
-     * @param <In> Input
+     * @param <In>  Input
      * @param <Out> Output
-     * @param to Function to convert input to output.
-     * @param from Function to produce output from input.
-     * @return A {@link Conversion} object representing an ability to convert between input and
-     *     output.
+     * @param to    Function to convert input to output.
+     * @param from  Function to produce output from input.
+     * @return A {@link Conversion} object representing an ability to convert
+     *         between input and output.
      */
     static <In, Out> Conversion<In, Out> create(Function<In, Out> to, Function<Out, In> from) {
-        return new Conversion<>() {
-            public Out to(In value) {
-                return to.apply(value);
-            }
+	return new Conversion<>() {
+	    public Out to(In value) {
+		return to.apply(value);
+	    }
 
-            public In from(Out value) {
-                return from.apply(value);
-            }
-        };
+	    public In from(Out value) {
+		return from.apply(value);
+	    }
+	};
     }
 
     /**
@@ -46,7 +46,7 @@ public interface Conversion<From, To> {
      * @return This conversion represented as {@code Conversion<To, From>}.
      */
     default Conversion<To, From> invert() {
-        return create(this::from, this::to);
+	return create(this::from, this::to);
     }
 
     /**

@@ -8,9 +8,11 @@ package io.github.tigerbotics7125.tigerlib;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 
 /**
- * This class contains a collection of library classes which would on their own, be setup in {@code
- * TimedRobot.robotInit()} or run periodicly in {@code TimedRobot.robotPeriodic()}; but instead can
- * simply be run through one call in this class.
+ * This class contains a collection of library classes which would on their own,
+ * be setup in {@code
+ * TimedRobot.robotInit()} or run periodicly in
+ * {@code TimedRobot.robotPeriodic()}; but instead can simply be run through one
+ * call in this class.
  *
  * @author Jeffrey Morris | Tigerbotics 7125
  */
@@ -21,7 +23,7 @@ public final class TigerLib {
 
     /** Library periodic calls. */
     public static void periodic() {
-        // Scheduler is here to simplify user code.
-        CommandScheduler.getInstance().run();
+	// Scheduler is here to simplify user code.
+	CommandScheduler.getInstance().run();
     }
 }

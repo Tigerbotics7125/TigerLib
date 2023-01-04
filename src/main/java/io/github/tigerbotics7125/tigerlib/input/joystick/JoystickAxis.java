@@ -18,50 +18,49 @@ public class JoystickAxis implements Sendable {
     private final int mAxis;
 
     private boolean mInverted;
-    private Function<Double, Double> mInputCleaner =
-            (input) -> {
-                input = JoystickUtil.deadband(input, .075);
-                input = JoystickUtil.ramp(input, 3);
-                input = JoystickUtil.clamp(input, -1, 1);
-                return input;
-            };
+    private Function<Double, Double> mInputCleaner = (input) -> {
+	input = JoystickUtil.deadband(input, .075);
+	input = JoystickUtil.ramp(input, 3);
+	input = JoystickUtil.clamp(input, -1, 1);
+	return input;
+    };
 
     /**
      * Create a new {@link JoystickAxis} Object.
      *
      * @param joystick The HID controller to read the axis from.
-     * @param axis The axis index.
+     * @param axis     The axis index.
      * @param inverted Whether to invert the axis from its raw reading.
      */
     public JoystickAxis(GenericHID joystick, int axis, boolean inverted) {
-        mJoystick = joystick;
-        mAxis = axis;
-        mInverted = inverted;
+	mJoystick = joystick;
+	mAxis = axis;
+	mInverted = inverted;
     }
 
     /** @return Cleaning function applied to {@link JoystickAxis#getRaw()}. */
     public double get() {
-        return mInputCleaner.apply(getRaw());
+	return mInputCleaner.apply(getRaw());
     }
 
     /** @return Raw axis input, iverted if set. */
     public double getRaw() {
-        return mJoystick.getRawAxis(mAxis) * (mInverted ? -1 : 1);
+	return mJoystick.getRawAxis(mAxis) * (mInverted ? -1 : 1);
     }
 
     /** @param inputCleanerFunction Function to clean the raw input. */
     public void setCleaner(Function<Double, Double> inputCleanerFunction) {
-        mInputCleaner = inputCleanerFunction;
+	mInputCleaner = inputCleanerFunction;
     }
 
     /** Invert the input from the current state. */
     public void invert() {
-        mInverted = !mInverted;
+	mInverted = !mInverted;
     }
 
     @Override
     public void initSendable(SendableBuilder builder) {
-        builder.addDoubleProperty("raw", this::getRaw, null);
-        builder.addDoubleProperty("val", this::get, null);
+	builder.addDoubleProperty("raw", this::getRaw, null);
+	builder.addDoubleProperty("val", this::get, null);
     }
 }

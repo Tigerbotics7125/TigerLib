@@ -12,9 +12,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * This class is a container for all of the group managing features of this {@link Trigger} class.
- *
- * <p>This class provides a way to manage a group of {@link Trigger}s.
+ * This class is a container for all of the group managing features of this
+ * {@link Trigger} class.
+ * <p>
+ * This class provides a way to manage a group of {@link Trigger}s.
  *
  * @author Jeffrey Morris | Tigerbotics 7125
  */
@@ -24,8 +25,8 @@ public class TriggerGroup implements Sendable {
 
     /** Create a new {@link TriggerGroup} Object. */
     public TriggerGroup() {
-        mTriggers = new ArrayList<>();
-        mEnabled = true;
+	mTriggers = new ArrayList<>();
+	mEnabled = true;
     }
 
     /**
@@ -34,30 +35,32 @@ public class TriggerGroup implements Sendable {
      * @param enabled Whether to enable the trigger.
      */
     private void setState(boolean enabled) {
-        if (enabled) enable();
-        else disable();
+	if (enabled)
+	    enable();
+	else
+	    disable();
     }
 
     /** Enable all {@link Trigger}s withing this {@link TriggerGroup}. */
     public void enable() {
-        mEnabled = true;
-        mTriggers.forEach(Trigger::enable);
+	mEnabled = true;
+	mTriggers.forEach(Trigger::enable);
     }
 
     /** Disable all {@link Trigger}s withing this {@link TriggerGroup}. */
     public void disable() {
-        mEnabled = false;
-        mTriggers.forEach(Trigger::disable);
+	mEnabled = false;
+	mTriggers.forEach(Trigger::disable);
     }
 
     /** @return If this {@link TriggerGroup} is enabled. */
     public boolean isEnabled() {
-        return mEnabled;
+	return mEnabled;
     }
 
     /** @return If this {@link TriggerGroup} is disabled. */
     public boolean isDisabled() {
-        return !mEnabled;
+	return !mEnabled;
     }
 
     /**
@@ -66,11 +69,13 @@ public class TriggerGroup implements Sendable {
      * @param trigger The {@link Trigger} to enroll.
      */
     public void enroll(Trigger trigger) {
-        mTriggers.add(trigger);
+	mTriggers.add(trigger);
 
-        // ensure trigger follows this groups state.
-        if (mEnabled) trigger.enable();
-        else trigger.disable();
+	// ensure trigger follows this groups state.
+	if (mEnabled)
+	    trigger.enable();
+	else
+	    trigger.disable();
     }
 
     /**
@@ -79,13 +84,13 @@ public class TriggerGroup implements Sendable {
      * @param trigger The {link Trigger} to dismiss.
      */
     public void dismiss(Trigger trigger) {
-        mTriggers.remove(trigger);
+	mTriggers.remove(trigger);
     }
 
     @Override
     public void initSendable(SendableBuilder builder) {
-        builder.setActuator(true);
-        builder.setSafeState(this::disable);
-        builder.addBooleanProperty("enabled", this::isEnabled, this::setState);
+	builder.setActuator(true);
+	builder.setSafeState(this::disable);
+	builder.addBooleanProperty("enabled", this::isEnabled, this::setState);
     }
 }
