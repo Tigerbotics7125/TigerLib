@@ -25,6 +25,7 @@ public class SnakeEyes {
 
     /** Transformation from robots center (x, y), and the floor (z) */
     private Transform3d mRobotToCamera;
+    private PhotonPipelineResult mCachedResult;
 
     public SnakeEyes(String cameraName, Transform3d robotToCamera) {
 	this(NetworkTableInstance.getDefault(), cameraName, robotToCamera);
@@ -112,26 +113,36 @@ public class SnakeEyes {
 	return mAprilTags.get(tagId);
     }
 
-    /** @return Latest PhotonVision result. */
+    /**
+     * Returns & <b>caches</b> the latest result. Allows users to make this call
+     * without performing actions on the returned value.
+     *
+     * @return The latest result.
+     */
     public PhotonPipelineResult getLatestResult() {
-	return mCam.getLatestResult();
+	mCachedResult = mCam.getLatestResult();
+	return mCachedResult;
+    }
+
+    private PhotonPipelineResult getCachedResult() {
+	return mCachedResult == null ? getLatestResult() : mCachedResult;
     }
 
     /** @return List of seen targets, if there are none, an empty list. */
     public List<PhotonTrackedTarget> getTargets() {
-	var results = getLatestResult();
+	var results = getCachedResult();
 	return results.hasTargets() ? results.getTargets() : List.of();
     }
 
     /** @return The latency of the vision system in milli seconds. */
     public double getLatency() {
-	var results = getLatestResult();
+	var results = getCachedResult();
 	return results.getLatencyMillis();
     }
 
     /** @return The timestamp of the latest result in seconds. */
     public double getTimestamp() {
-	var results = getLatestResult();
+	var results = getCachedResult();
 	return results.getTimestampSeconds();
     }
 
