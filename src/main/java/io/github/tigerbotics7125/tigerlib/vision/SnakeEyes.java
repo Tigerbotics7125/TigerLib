@@ -7,8 +7,8 @@ package io.github.tigerbotics7125.tigerlib.vision;
 
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Transform3d;
+import edu.wpi.first.net.PortForwarder;
 import edu.wpi.first.networktables.NetworkTableInstance;
-import edu.wpi.first.util.net.PortForwarder;
 
 import java.util.HashMap;
 import java.util.List;
@@ -20,19 +20,19 @@ import org.photonvision.targeting.PhotonTrackedTarget;
 
 public class SnakeEyes {
 
-    private final PhotonCamera mCam;
-    private final Map<Integer, Pose3d> mAprilTags;
+    public final PhotonCamera mCam;
+    public final Map<Integer, Pose3d> mAprilTags;
+
     /** Transformation from robots center (x, y), and the floor (z) */
     private Transform3d mRobotToCamera;
 
     public SnakeEyes(String cameraName, Transform3d robotToCamera) {
-        this(NetworkTableInstance.getDefault(), cameraName, robotToCamera);
+	this(NetworkTableInstance.getDefault(), cameraName, robotToCamera);
     }
 
-    public SnakeEyes(
-            NetworkTableInstance ntInstance, String cameraName, Transform3d robotToCamera) {
-        mCam = new PhotonCamera(ntInstance, cameraName);
-        mAprilTags = new HashMap<>();
+    public SnakeEyes(NetworkTableInstance ntInstance, String cameraName, Transform3d robotToCamera) {
+	mCam = new PhotonCamera(ntInstance, cameraName);
+	mAprilTags = new HashMap<>();
     }
 
     //
@@ -41,7 +41,7 @@ public class SnakeEyes {
 
     /** Port forward the vision dashboard over rio usb connection. */
     public static void portforward() {
-        PortForwarder.add(5800, "10.71.25.11", 5800);
+	PortForwarder.add(5800, "10.71.25.11", 5800);
     }
 
     //
@@ -55,27 +55,27 @@ public class SnakeEyes {
      * @param tagPose
      */
     public void addAprilTag(int tagId, Pose3d tagPose) {
-        mAprilTags.put(tagId, tagPose);
+	mAprilTags.put(tagId, tagPose);
     }
 
     /** Turn the LEDs on. */
     public void ledsOn() {
-        mCam.setLED(VisionLEDMode.kOn);
+	mCam.setLED(VisionLEDMode.kOn);
     }
 
     /** Turn the LEDs off. */
     public void ledsOff() {
-        mCam.setLED(VisionLEDMode.kOff);
+	mCam.setLED(VisionLEDMode.kOff);
     }
 
     /** Blink the LEDs. */
     public void ledsBlink() {
-        mCam.setLED(VisionLEDMode.kBlink);
+	mCam.setLED(VisionLEDMode.kBlink);
     }
 
     /** Set the LEDs to their default mode. */
     public void ledsDefault() {
-        mCam.setLED(VisionLEDMode.kDefault);
+	mCam.setLED(VisionLEDMode.kDefault);
     }
 
     /**
@@ -84,7 +84,7 @@ public class SnakeEyes {
      * @param ledMode
      */
     public void setLeds(VisionLEDMode ledMode) {
-        mCam.setLED(ledMode);
+	mCam.setLED(ledMode);
     }
 
     /**
@@ -93,45 +93,62 @@ public class SnakeEyes {
      * @param index
      */
     public void setPipeline(int index) {
-        mCam.setPipelineIndex(index);
+	mCam.setPipelineIndex(index);
     }
 
     //
     // GETTERS
     //
 
+    public Transform3d getRobotToCamera() {
+	return mRobotToCamera;
+    }
+
     /**
      * @param tagId The tag to get.
      * @return the Pose3d of the tag, null if tag has not been added.
      */
     public Pose3d getTagPose(int tagId) {
-        return mAprilTags.get(tagId);
+	return mAprilTags.get(tagId);
     }
 
     /** @return Latest PhotonVision result. */
     public PhotonPipelineResult getLatestResult() {
-        return mCam.getLatestResult();
+	return mCam.getLatestResult();
     }
 
     /** @return List of seen targets, if there are none, an empty list. */
     public List<PhotonTrackedTarget> getTargets() {
-        var results = getLatestResult();
-        return results.hasTargets() ? results.getTargets() : List.of();
+	var results = getLatestResult();
+	return results.hasTargets() ? results.getTargets() : List.of();
+    }
+
+    /** @return The latency of the vision system in milli seconds. */
+    public double getLatency() {
+	var results = getLatestResult();
+	return results.getLatencyMillis();
+    }
+
+    /** @return The timestamp of the latest result in seconds. */
+    public double getTimestamp() {
+	var results = getLatestResult();
+	return results.getTimestampSeconds();
     }
 
     /**
      * @param target The target to estimate robot pose by.
      * @return the Pose3d of the robot as known by the target.
-     * @throws IllegalArgumentException if target fiducial id is not in known tags map.
+     * @throws IllegalArgumentException if target fiducial id is not in known
+     *                                  tags map.
      */
     public Pose3d getRobotPose(PhotonTrackedTarget target) {
-        Pose3d targetPose = mAprilTags.get(target.getFiducialId());
+	Pose3d targetPose = mAprilTags.get(target.getFiducialId());
 
-        if (targetPose == null)
-            throw new IllegalArgumentException("Target does not have known position.");
+	if (targetPose == null)
+	    throw new IllegalArgumentException("Target does not have known position.");
 
-        Transform3d targetToCam = target.getBestCameraToTarget().inverse();
+	Transform3d targetToCam = target.getBestCameraToTarget().inverse();
 
-        return targetPose.transformBy(targetToCam).transformBy(mRobotToCamera.inverse());
+	return targetPose.transformBy(targetToCam).transformBy(mRobotToCamera.inverse());
     }
 }

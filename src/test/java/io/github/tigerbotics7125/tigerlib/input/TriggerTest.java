@@ -31,7 +31,8 @@ public class TriggerTest {
     public void setup() {
 	CommandScheduler.getInstance().cancelAll();
 	CommandScheduler.getInstance().enable();
-	CommandScheduler.getInstance().clearButtons();
+	CommandScheduler.getInstance().getActiveButtonLoop().clear();
+	;
 	setDSEnable(true);
     }
 
@@ -100,7 +101,7 @@ public class TriggerTest {
 	b = false;
 	Trigger t = new Trigger(bool).activate(ON_FALLING);
 	Command c = new RunCommand(() -> {
-	}).perpetually();
+	}).repeatedly();
 	t.trigger(c);
 
 	// not on when expected.
@@ -128,7 +129,7 @@ public class TriggerTest {
 	b = true;
 	Trigger t = new Trigger(bool).activate(ON_RISING);
 	Command c = new RunCommand(() -> {
-	}).perpetually();
+	}).repeatedly();
 	t.trigger(c);
 
 	// not on when expected.
