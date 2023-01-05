@@ -35,20 +35,20 @@ public class Trigger implements BooleanSupplier, Sendable {
      * its state.
      */
     public enum ActivationCondition {
-	WHILE_LOW(0), WHILE_HIGH(1), ON_FALLING(2), ON_RISING(3),;
+        WHILE_LOW(0), WHILE_HIGH(1), ON_FALLING(2), ON_RISING(3),;
 
-	private final int mType;
+        private final int mType;
 
-	private ActivationCondition(int type) {
-	    mType = type;
-	}
+        private ActivationCondition(int type) {
+            mType = type;
+        }
 
-	public boolean isWhile() {
-	    if (mType == WHILE_LOW.mType || mType == WHILE_HIGH.mType)
-		return true;
-	    else
-		return false;
-	}
+        public boolean isWhile() {
+            if (mType == WHILE_LOW.mType || mType == WHILE_HIGH.mType)
+                return true;
+            else
+                return false;
+        }
     }
 
     private final BooleanSupplier mInput;
@@ -65,10 +65,10 @@ public class Trigger implements BooleanSupplier, Sendable {
      * @param activateOn The {@link ActivationCondition} to follow.
      */
     private Trigger(BooleanSupplier input, ActivationCondition activateOn) {
-	mInput = input;
-	mActivation = activateOn;
-	mCommands = new ArrayList<>();
-	mEnabled = true;
+        mInput = input;
+        mActivation = activateOn;
+        mCommands = new ArrayList<>();
+        mEnabled = true;
     }
 
     /**
@@ -77,31 +77,31 @@ public class Trigger implements BooleanSupplier, Sendable {
      * @param input The boolean input.
      */
     public Trigger(BooleanSupplier input) {
-	this(input, ActivationCondition.ON_RISING);
+        this(input, ActivationCondition.ON_RISING);
     }
 
     /** @return The input to this {@link Trigger}. */
     public boolean getAsBoolean() {
-	return get();
+        return get();
     }
 
     /** @return The state of this {@link Trigger}. */
     public boolean get() {
-	return mInput.getAsBoolean();
+        return mInput.getAsBoolean();
     }
 
     public Trigger join(TriggerGroup triggerGroup) {
-	triggerGroup.enroll(this);
-	return this;
+        triggerGroup.enroll(this);
+        return this;
     }
 
     public Trigger leave(TriggerGroup triggerGroup) {
-	triggerGroup.dismiss(this);
-	return this;
+        triggerGroup.dismiss(this);
+        return this;
     }
 
     public Trigger trigger(Runnable toRun) {
-	return trigger(new InstantCommand(toRun));
+        return trigger(new InstantCommand(toRun));
     }
 
     /**
@@ -111,31 +111,31 @@ public class Trigger implements BooleanSupplier, Sendable {
      * @return This {@link Trigger} for chaining methods.
      */
     public Trigger trigger(Command cmd) {
-	CommandScheduler.getInstance().addButton(new Runnable() {
-	    private boolean mLastState = get();
+        CommandScheduler.getInstance().getActiveButtonLoop().bind(new Runnable() {
+            private boolean mLastState = get();
 
-	    @Override
-	    public void run() {
-		boolean state = get();
-		boolean toActivate = switch (mActivation) {
-		case WHILE_LOW -> !state;
-		case WHILE_HIGH -> state;
-		case ON_FALLING -> !state && mLastState;
-		case ON_RISING -> state && !mLastState;
-		};
+            @Override
+            public void run() {
+                boolean state = get();
+                boolean toActivate = switch (mActivation) {
+                    case WHILE_LOW -> !state;
+                    case WHILE_HIGH -> state;
+                    case ON_FALLING -> !state && mLastState;
+                    case ON_RISING -> state && !mLastState;
+                };
 
-		if (toActivate && mEnabled && !cmd.isScheduled())
-		    cmd.schedule();
-		// cancel "while" commands when they should no longer be active.
-		else if (!toActivate && cmd.isScheduled() && mActivation.isWhile())
-		    cmd.cancel();
+                if (toActivate && mEnabled && !cmd.isScheduled())
+                    cmd.schedule();
+                // cancel "while" commands when they should no longer be active.
+                else if (!toActivate && cmd.isScheduled() && mActivation.isWhile())
+                    cmd.cancel();
 
-		mLastState = state;
-	    }
-	});
+                mLastState = state;
+            }
+        });
 
-	mCommands.add(cmd);
-	return this;
+        mCommands.add(cmd);
+        return this;
     }
 
     /**
@@ -144,7 +144,7 @@ public class Trigger implements BooleanSupplier, Sendable {
      *         ActivationCondition.
      */
     public Trigger activate(ActivationCondition activateOn) {
-	return new Trigger(mInput, activateOn);
+        return new Trigger(mInput, activateOn);
     }
 
     /**
@@ -153,29 +153,29 @@ public class Trigger implements BooleanSupplier, Sendable {
      * @param enabled Whether to enable the trigger.
      */
     private void setState(boolean enabled) {
-	mEnabled = enabled;
+        mEnabled = enabled;
     }
 
     /** Enables this {@link Trigger}. */
     public void enable() {
-	mEnabled = true;
+        mEnabled = true;
     }
 
     /** Disables this {@link Trigger}. */
     public void disable() {
-	mEnabled = false;
-	// Cancel commands if the trigger gets disabled.
-	mCommands.forEach(Command::cancel);
+        mEnabled = false;
+        // Cancel commands if the trigger gets disabled.
+        mCommands.forEach(Command::cancel);
     }
 
     /** @return If this {@link Trigger} is enabled. */
     public boolean isEnabled() {
-	return mEnabled;
+        return mEnabled;
     }
 
     /** @return If this {@link Trigger} is disabled. */
     public boolean isDisabled() {
-	return !mEnabled;
+        return !mEnabled;
     }
 
     /**
@@ -192,22 +192,22 @@ public class Trigger implements BooleanSupplier, Sendable {
      * @return A debounced {@link Trigger}.
      */
     public Trigger debounce(double debounceTimeSeconds) {
-	DebounceType t = switch (mActivation) {
-	case WHILE_LOW, WHILE_HIGH -> DebounceType.kBoth;
-	case ON_FALLING -> DebounceType.kFalling;
-	case ON_RISING -> DebounceType.kRising;
-	};
-	// Java 11
-	/*
-	 * switch (mActivation) { case WHILE_LOW: case WHILE_HIGH: case
-	 * ON_TRANSITION: t = DebounceType.kBoth; break; case ON_FALLING: t =
-	 * DebounceType.kFalling; break; case ON_RISING: t =
-	 * DebounceType.kRising; break; default: t = DebounceType.kBoth; break;
-	 * }
-	 */
+        DebounceType t = switch (mActivation) {
+            case WHILE_LOW, WHILE_HIGH -> DebounceType.kBoth;
+            case ON_FALLING -> DebounceType.kFalling;
+            case ON_RISING -> DebounceType.kRising;
+        };
+        // Java 11
+        /*
+         * switch (mActivation) { case WHILE_LOW: case WHILE_HIGH: case
+         * ON_TRANSITION: t = DebounceType.kBoth; break; case ON_FALLING: t =
+         * DebounceType.kFalling; break; case ON_RISING: t =
+         * DebounceType.kRising; break; default: t = DebounceType.kBoth; break;
+         * }
+         */
 
-	Debouncer d = new Debouncer(debounceTimeSeconds, t);
-	return new Trigger(() -> d.calculate(this.getAsBoolean()));
+        Debouncer d = new Debouncer(debounceTimeSeconds, t);
+        return new Trigger(() -> d.calculate(this.getAsBoolean()));
     }
 
     /**
@@ -228,7 +228,7 @@ public class Trigger implements BooleanSupplier, Sendable {
      *         {@link Trigger} does.
      */
     public Trigger and(Trigger other) {
-	return new Trigger(() -> get() && other.get(), mActivation);
+        return new Trigger(() -> get() && other.get(), mActivation);
     }
 
     /**
@@ -249,7 +249,7 @@ public class Trigger implements BooleanSupplier, Sendable {
      *         {@link Trigger} does.
      */
     public Trigger nand(Trigger other) {
-	return new Trigger(() -> !and(other).get(), mActivation);
+        return new Trigger(() -> !and(other).get(), mActivation);
     }
 
     /**
@@ -270,7 +270,7 @@ public class Trigger implements BooleanSupplier, Sendable {
      *         {@link Trigger} does.
      */
     public Trigger or(Trigger other) {
-	return new Trigger(() -> get() || other.get(), mActivation);
+        return new Trigger(() -> get() || other.get(), mActivation);
     }
 
     /**
@@ -291,7 +291,7 @@ public class Trigger implements BooleanSupplier, Sendable {
      *         {@link Trigger} does.
      */
     public Trigger xor(Trigger other) {
-	return new Trigger(() -> get() ^ other.get(), mActivation);
+        return new Trigger(() -> get() ^ other.get(), mActivation);
     }
 
     /**
@@ -312,7 +312,7 @@ public class Trigger implements BooleanSupplier, Sendable {
      *         {@link Trigger} does.
      */
     public Trigger nor(Trigger other) {
-	return new Trigger(() -> !or(other).get(), mActivation);
+        return new Trigger(() -> !or(other).get(), mActivation);
     }
 
     /**
@@ -333,7 +333,7 @@ public class Trigger implements BooleanSupplier, Sendable {
      *         {@link Trigger} does.
      */
     public Trigger xnor(Trigger other) {
-	return new Trigger(() -> !xor(other).get(), mActivation);
+        return new Trigger(() -> !xor(other).get(), mActivation);
     }
 
     /**
@@ -350,15 +350,15 @@ public class Trigger implements BooleanSupplier, Sendable {
      *         {@link Trigger} does.
      */
     public Trigger not() {
-	return new Trigger(() -> !get(), mActivation);
+        return new Trigger(() -> !get(), mActivation);
     }
 
     @Override
     public void initSendable(SendableBuilder builder) {
-	builder.setActuator(true);
-	builder.setSafeState(this::disable);
-	builder.setSmartDashboardType("Trigger");
-	builder.addBooleanProperty("enabled", this::isEnabled, this::setState);
-	builder.addBooleanProperty("output", this::get, null);
+        builder.setActuator(true);
+        builder.setSafeState(this::disable);
+        builder.setSmartDashboardType("Trigger");
+        builder.addBooleanProperty("enabled", this::isEnabled, this::setState);
+        builder.addBooleanProperty("output", this::get, null);
     }
 }

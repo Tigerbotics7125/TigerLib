@@ -18,6 +18,12 @@ import org.photonvision.common.hardware.VisionLEDMode;
 import org.photonvision.targeting.PhotonPipelineResult;
 import org.photonvision.targeting.PhotonTrackedTarget;
 
+/**
+ * This class removes a lot of boiler plate code when designing vison logic, and
+ * allows for some comfort features such as caching results.
+ *
+ * @author Jeffrey Morris | Tigerboitcs 7125
+ */
 public class SnakeEyes {
 
     public final PhotonCamera mCam;
@@ -28,12 +34,12 @@ public class SnakeEyes {
     private PhotonPipelineResult mCachedResult;
 
     public SnakeEyes(String cameraName, Transform3d robotToCamera) {
-	this(NetworkTableInstance.getDefault(), cameraName, robotToCamera);
+        this(NetworkTableInstance.getDefault(), cameraName, robotToCamera);
     }
 
     public SnakeEyes(NetworkTableInstance ntInstance, String cameraName, Transform3d robotToCamera) {
-	mCam = new PhotonCamera(ntInstance, cameraName);
-	mAprilTags = new HashMap<>();
+        mCam = new PhotonCamera(ntInstance, cameraName);
+        mAprilTags = new HashMap<>();
     }
 
     //
@@ -42,7 +48,7 @@ public class SnakeEyes {
 
     /** Port forward the vision dashboard over rio usb connection. */
     public static void portforward() {
-	PortForwarder.add(5800, "10.71.25.11", 5800);
+        PortForwarder.add(5800, "10.71.25.11", 5800);
     }
 
     //
@@ -56,27 +62,27 @@ public class SnakeEyes {
      * @param tagPose
      */
     public void addAprilTag(int tagId, Pose3d tagPose) {
-	mAprilTags.put(tagId, tagPose);
+        mAprilTags.put(tagId, tagPose);
     }
 
     /** Turn the LEDs on. */
     public void ledsOn() {
-	mCam.setLED(VisionLEDMode.kOn);
+        mCam.setLED(VisionLEDMode.kOn);
     }
 
     /** Turn the LEDs off. */
     public void ledsOff() {
-	mCam.setLED(VisionLEDMode.kOff);
+        mCam.setLED(VisionLEDMode.kOff);
     }
 
     /** Blink the LEDs. */
     public void ledsBlink() {
-	mCam.setLED(VisionLEDMode.kBlink);
+        mCam.setLED(VisionLEDMode.kBlink);
     }
 
     /** Set the LEDs to their default mode. */
     public void ledsDefault() {
-	mCam.setLED(VisionLEDMode.kDefault);
+        mCam.setLED(VisionLEDMode.kDefault);
     }
 
     /**
@@ -85,7 +91,7 @@ public class SnakeEyes {
      * @param ledMode
      */
     public void setLeds(VisionLEDMode ledMode) {
-	mCam.setLED(ledMode);
+        mCam.setLED(ledMode);
     }
 
     /**
@@ -94,7 +100,7 @@ public class SnakeEyes {
      * @param index
      */
     public void setPipeline(int index) {
-	mCam.setPipelineIndex(index);
+        mCam.setPipelineIndex(index);
     }
 
     //
@@ -102,7 +108,7 @@ public class SnakeEyes {
     //
 
     public Transform3d getRobotToCamera() {
-	return mRobotToCamera;
+        return mRobotToCamera;
     }
 
     /**
@@ -110,40 +116,40 @@ public class SnakeEyes {
      * @return the Pose3d of the tag, null if tag has not been added.
      */
     public Pose3d getTagPose(int tagId) {
-	return mAprilTags.get(tagId);
+        return mAprilTags.get(tagId);
     }
 
     /**
-     * Returns & <b>caches</b> the latest result. Allows users to make this call
+     * Returns and <b>caches</b> the latest result. Allows users to make this call
      * without performing actions on the returned value.
      *
      * @return The latest result.
      */
     public PhotonPipelineResult getLatestResult() {
-	mCachedResult = mCam.getLatestResult();
-	return mCachedResult;
+        mCachedResult = mCam.getLatestResult();
+        return mCachedResult;
     }
 
     private PhotonPipelineResult getCachedResult() {
-	return mCachedResult == null ? getLatestResult() : mCachedResult;
+        return mCachedResult == null ? getLatestResult() : mCachedResult;
     }
 
     /** @return List of seen targets, if there are none, an empty list. */
     public List<PhotonTrackedTarget> getTargets() {
-	var results = getCachedResult();
-	return results.hasTargets() ? results.getTargets() : List.of();
+        var results = getCachedResult();
+        return results.hasTargets() ? results.getTargets() : List.of();
     }
 
     /** @return The latency of the vision system in milli seconds. */
     public double getLatency() {
-	var results = getCachedResult();
-	return results.getLatencyMillis();
+        var results = getCachedResult();
+        return results.getLatencyMillis();
     }
 
     /** @return The timestamp of the latest result in seconds. */
     public double getTimestamp() {
-	var results = getCachedResult();
-	return results.getTimestampSeconds();
+        var results = getCachedResult();
+        return results.getTimestampSeconds();
     }
 
     /**
@@ -153,13 +159,13 @@ public class SnakeEyes {
      *                                  tags map.
      */
     public Pose3d getRobotPose(PhotonTrackedTarget target) {
-	Pose3d targetPose = mAprilTags.get(target.getFiducialId());
+        Pose3d targetPose = mAprilTags.get(target.getFiducialId());
 
-	if (targetPose == null)
-	    throw new IllegalArgumentException("Target does not have known position.");
+        if (targetPose == null)
+            throw new IllegalArgumentException("Target does not have known position.");
 
-	Transform3d targetToCam = target.getBestCameraToTarget().inverse();
+        Transform3d targetToCam = target.getBestCameraToTarget().inverse();
 
-	return targetPose.transformBy(targetToCam).transformBy(mRobotToCamera.inverse());
+        return targetPose.transformBy(targetToCam).transformBy(mRobotToCamera.inverse());
     }
 }
