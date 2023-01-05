@@ -9,7 +9,6 @@ import static io.github.tigerbotics7125.tigerlib.input.trigger.Trigger.Activatio
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import io.github.tigerbotics7125.tigerlib.TigerLib;
 import io.github.tigerbotics7125.tigerlib.input.trigger.Trigger;
 import io.github.tigerbotics7125.tigerlib.input.trigger.TriggerGroup;
 
@@ -32,7 +31,6 @@ public class TriggerTest {
 	CommandScheduler.getInstance().cancelAll();
 	CommandScheduler.getInstance().enable();
 	CommandScheduler.getInstance().getActiveButtonLoop().clear();
-	;
 	setDSEnable(true);
     }
 
@@ -59,17 +57,17 @@ public class TriggerTest {
 
 	// not on when expected.
 	b = true;
-	TigerLib.periodic();
+	CommandScheduler.getInstance().run();
 	assertFalse(c.isScheduled());
 
 	// on when expected.
 	b = false;
-	TigerLib.periodic();
+	CommandScheduler.getInstance().run();
 	assertTrue(c.isScheduled());
 
 	// cancels when expected.
 	b = true;
-	TigerLib.periodic();
+	CommandScheduler.getInstance().run();
 	assertFalse(c.isScheduled());
     }
 
@@ -82,17 +80,17 @@ public class TriggerTest {
 
 	// not on when expected.
 	b = false;
-	TigerLib.periodic();
+	CommandScheduler.getInstance().run();
 	assertFalse(c.isScheduled());
 
 	// on when expected.
 	b = true;
-	TigerLib.periodic();
+	CommandScheduler.getInstance().run();
 	assertTrue(c.isScheduled());
 
 	// cancel when expected.
 	b = false;
-	TigerLib.periodic();
+	CommandScheduler.getInstance().run();
 	assertFalse(c.isScheduled());
     }
 
@@ -106,21 +104,21 @@ public class TriggerTest {
 
 	// not on when expected.
 	b = false;
-	TigerLib.periodic();
+	CommandScheduler.getInstance().run();
 	assertFalse(c.isScheduled());
 
 	b = true;
-	TigerLib.periodic();
+	CommandScheduler.getInstance().run();
 	assertFalse(c.isScheduled());
 
 	// on when expected.
 	b = false;
-	TigerLib.periodic();
+	CommandScheduler.getInstance().run();
 	assertTrue(c.isScheduled());
 
 	// does not cancel, as expected
 	b = true;
-	TigerLib.periodic();
+	CommandScheduler.getInstance().run();
 	assertTrue(c.isScheduled());
     }
 
@@ -134,21 +132,21 @@ public class TriggerTest {
 
 	// not on when expected.
 	b = true;
-	TigerLib.periodic();
+	CommandScheduler.getInstance().run();
 	assertFalse(c.isScheduled());
 
 	b = false;
-	TigerLib.periodic();
+	CommandScheduler.getInstance().run();
 	assertFalse(c.isScheduled());
 
 	// on when expected.
 	b = true;
-	TigerLib.periodic();
+	CommandScheduler.getInstance().run();
 	assertTrue(c.isScheduled());
 
 	// does not cancel, as expected
 	b = false;
-	TigerLib.periodic();
+	CommandScheduler.getInstance().run();
 	assertTrue(c.isScheduled());
     }
 
@@ -196,7 +194,7 @@ public class TriggerTest {
 	});
 
 	t.trigger(c).join(tg);
-	TigerLib.periodic();
+	CommandScheduler.getInstance().run();
 
 	assertTrue(c.isScheduled());
 
@@ -207,7 +205,7 @@ public class TriggerTest {
 
 	// re enable
 	t.enable();
-	TigerLib.periodic();
+	CommandScheduler.getInstance().run();
 	assertTrue(c.isScheduled());
 
 	// disabled trigger groups should disable all triggers, consequentially
@@ -216,7 +214,7 @@ public class TriggerTest {
 	assertFalse(c.isScheduled());
 
 	tg.enable();
-	TigerLib.periodic();
+	CommandScheduler.getInstance().run();
 	assertTrue(c.isScheduled());
     }
 }
