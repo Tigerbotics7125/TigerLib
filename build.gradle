@@ -39,11 +39,6 @@ publishing {
     }
 }
 
-wpi.java.configureTestTasks(test)
-test {
-    useJUnitPlatform()
-}
-
 spotless {
     // get enforce property
     var enforceSpotless = project.properties["enforceSpotless"]
@@ -79,6 +74,12 @@ spotless {
         indentWithSpaces(2)
         endWithNewline()
     }
+}
+
+
+wpi.java.configureTestTasks(test)
+test {
+    useJUnitPlatform()
 }
 
 // gradle test logging
