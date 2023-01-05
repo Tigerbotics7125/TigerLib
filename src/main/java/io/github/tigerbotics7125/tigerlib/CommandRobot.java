@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2022 Tigerbotics and it's members. All rights reserved.
+ * This work is licensed under the terms of the GNU GPLv3 license
+ * found in the root directory of this project.
+ */
 package io.github.tigerbotics7125.tigerlib;
 
 import edu.wpi.first.wpilibj.TimedRobot;
@@ -13,56 +18,44 @@ public class CommandRobot extends TimedRobot {
 
     @SuppressWarnings("resource")
     public CommandRobot() {
-        super();
-        this.addPeriodic(CommandScheduler.getInstance()::run, kDefaultPeriod);
+	super();
+	this.addPeriodic(CommandScheduler.getInstance()::run, kDefaultPeriod);
     }
 
     @Override
-    public void robotInit() {
-    }
+    public void robotInit() {}
 
     @Override
-    public void robotPeriodic() {
-    }
+    public void robotPeriodic() {}
 
     @Override
-    public void simulationInit() {
-    }
+    public void simulationInit() {}
 
     @Override
-    public void simulationPeriodic() {
-    }
+    public void simulationPeriodic() {}
 
     @Override
-    public void disabledInit() {
-    }
+    public void disabledInit() {}
 
     @Override
-    public void disabledPeriodic() {
-    }
+    public void disabledPeriodic() {}
 
     @Override
-    public void teleopInit() {
-    }
+    public void teleopInit() {}
 
     @Override
-    public void teleopPeriodic() {
-    }
+    public void teleopPeriodic() {}
 
     @Override
-    public void autonomousInit() {
-    }
+    public void autonomousInit() {}
 
     @Override
-    public void autonomousPeriodic() {
-    }
+    public void autonomousPeriodic() {}
 
     @Override
-    public void testInit() {
-    }
+    public void testInit() {}
 
     @Override
-    public void testPeriodic() {
-    }
+    public void testPeriodic() {}
 
 }
