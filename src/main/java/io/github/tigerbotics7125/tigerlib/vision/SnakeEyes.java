@@ -5,15 +5,16 @@
  */
 package io.github.tigerbotics7125.tigerlib.vision;
 
-import edu.wpi.first.math.geometry.Pose3d;
-import edu.wpi.first.math.geometry.Transform3d;
+import edu.wpi.first.math.geometry.*;
 import edu.wpi.first.net.PortForwarder;
 import edu.wpi.first.networktables.NetworkTableInstance;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import org.photonvision.PhotonCamera;
+import org.photonvision.PhotonTargetSortMode;
 import org.photonvision.common.hardware.VisionLEDMode;
 import org.photonvision.targeting.PhotonPipelineResult;
 import org.photonvision.targeting.PhotonTrackedTarget;
@@ -26,12 +27,12 @@ import org.photonvision.targeting.PhotonTrackedTarget;
  */
 public class SnakeEyes {
 
-    public final PhotonCamera mCam;
-    public final Map<Integer, Pose3d> mAprilTags;
+    protected final PhotonCamera mCam;
+    protected final Map<Integer, Pose3d> mAprilTags;
 
     /** Transformation from robots center (x, y), and the floor (z) */
-    private Transform3d mRobotToCamera;
-    private PhotonPipelineResult mCachedResult;
+    protected Transform3d mRobotToCamera;
+    protected PhotonPipelineResult mCachedResult;
 
     public SnakeEyes(String cameraName, Transform3d robotToCamera) {
 	this(NetworkTableInstance.getDefault(), cameraName, robotToCamera);
@@ -140,6 +141,13 @@ public class SnakeEyes {
 	return results.hasTargets() ? results.getTargets() : List.of();
     }
 
+    /**
+     * @return If any targets are seen.
+     */
+    public boolean hasTargets() {
+	return !getTargets().isEmpty();
+    }
+
     /** @return The latency of the vision system in milli seconds. */
     public double getLatency() {
 	var results = getCachedResult();
@@ -168,4 +176,78 @@ public class SnakeEyes {
 
 	return targetPose.transformBy(targetToCam).transformBy(mRobotToCamera.inverse());
     }
+
+    /**
+     * @param targetToFace
+     * @param robotPose
+     * @return The heading the robot should be at if it were to face the target
+     *         head-on.
+     */
+    public Rotation2d getFaceTargetAngle(PhotonTrackedTarget targetToFace, Pose2d robotPose) {
+	// get tags pose
+	Pose2d tagPose = getTagPose(targetToFace.getFiducialId()).toPose2d();
+
+	// get the triangle from robot to tag
+	Transform2d robotToTag = new Transform2d(robotPose, tagPose);
+
+	// determine the reference angle
+	double angleToRotate = Math.atan2(robotToTag.getY(), robotToTag.getX());
+
+	// the heading which will make the robot face the tag is its current
+	// rotation
+	// rotated by the reference.
+	return robotPose.getRotation().rotateBy(new Rotation2d(angleToRotate));
+    }
+
+    /**
+     * Removes tags which have ambiguities larger than the provided threshold.
+     *
+     * @param tags               List of tags to edit.
+     * @param ambiguityThreshold tags with ambiguity values greater than this
+     *                           will be removed.
+     * @return The list of tags with ambiguous tags removed.
+     */
+    public List<PhotonTrackedTarget> removeAmbiguousTags(List<PhotonTrackedTarget> tags, double ambiguityThreshold) {
+	List<PhotonTrackedTarget> ambiguousTags = new ArrayList<>();
+	tags.forEach((t) -> {
+	    if (t.getPoseAmbiguity() > ambiguityThreshold)
+		ambiguousTags.add(t);
+	});
+	ambiguousTags.forEach(tags::remove);
+	return tags;
+    }
+
+    /**
+     * @param sortMode
+     * @param ambiguityThreshold
+     * @return The best tag
+     */
+    public PhotonTrackedTarget getBestTag(PhotonTargetSortMode sortMode, double ambiguityThreshold) {
+	List<PhotonTrackedTarget> targets = new ArrayList<>(getTargets());
+
+	// remove tags which are too ambiguous
+	targets = removeAmbiguousTags(targets, ambiguityThreshold);
+
+	targets.sort(sortMode.getComparator());
+
+	// after sorting, the best target is first in the list.
+	return targets.get(0);
+    }
+
+    /**
+     * @param ambiguityThreshold
+     * @return A list of estimated robot poses.
+     */
+    public List<Pose3d> getRobotPoseEstimates(double ambiguityThreshold) {
+	List<PhotonTrackedTarget> targets = getTargets();
+	targets = removeAmbiguousTags(targets, ambiguityThreshold);
+
+	List<Pose3d> robotPoses = new ArrayList<>();
+	targets.forEach((target) -> {
+	    robotPoses.add(this.getRobotPose(target));
+	});
+
+	return robotPoses;
+    }
+
 }
