@@ -31,4 +31,48 @@ public class MathUtil {
 
 	return (x - oldMin) * (newMax - newMin) / (oldMax - oldMin) + newMin;
     }
+
+    /**
+     * Generic PNPOLY algo for doubles.
+     *
+     * @param numVerts Number of verticies.
+     * @param vertXs   Static array of vertex x points.
+     * @param vertYs   Static array of vertex y points.
+     * @param testX    Test point X value.
+     * @param testY    Test point Y value.
+     * @return Wheter the supplied (x, y) coordinate lies within the supplied
+     *         polygon.
+     */
+    public static boolean pnpoly(int numVerts, double[] vertXs, double[] vertYs, double testX, double testY) {
+	int i, j = 0;
+	boolean c = false;
+	for (i = 0, j = numVerts - 1; i < numVerts; j = i++) {
+	    if (((vertYs[i] > testY) != (vertYs[j] > testY))
+		    && (testX < (vertXs[j] - vertXs[i]) * (testY - vertYs[i]) / (vertYs[j] - vertYs[i]) + vertXs[i]))
+		c = !c;
+	}
+	return c;
+    }
+
+    /**
+     * Generic PNPOLY algo for ints.
+     *
+     * @param numVerts Number of verticies.
+     * @param vertXs   Static array of vertex x points.
+     * @param vertYs   Static array of vertex y points.
+     * @param testX    Test point X value.
+     * @param testY    Test point Y value.
+     * @return Wheter the supplied (x, y) coordinate lies within the supplied
+     *         polygon.
+     */
+    public static boolean pnpoly(int numVerts, int[] vertXs, int[] vertYs, double testX, double testY) {
+	int i, j = 0;
+	boolean c = false;
+	for (i = 0, j = numVerts - 1; i < numVerts; j = i++) {
+	    if (((vertYs[i] > testY) != (vertYs[j] > testY))
+		    && (testX < (vertXs[j] - vertXs[i]) * (testY - vertYs[i]) / (vertYs[j] - vertYs[i]) + vertXs[i]))
+		c = !c;
+	}
+	return c;
+    }
 }
