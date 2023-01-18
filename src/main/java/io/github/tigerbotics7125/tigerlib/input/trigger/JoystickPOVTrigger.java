@@ -16,10 +16,10 @@ public class JoystickPOVTrigger extends Trigger {
 
     /**
      * @param joystick The HID device to read the POV from.
-     * @param pov      The pov index to read from.
-     * @param angle    The angle to read from.
+     * @param pov The pov index to read from.
+     * @param angle The angle to read from.
      */
     public JoystickPOVTrigger(GenericHID joystick, int pov, int angle) {
-	super(() -> joystick.getPOV(pov) == angle);
+        super(() -> joystick.getPOV(pov) == angle);
     }
 }

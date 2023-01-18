@@ -9,8 +9,7 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 
 /**
- * This class is designed to abstract away the need to call the CommandScheduler
- * periodically.
+ * This class is designed to abstract away the need to call the CommandScheduler periodically.
  *
  * @author Jeffrey Morris | Tigerbotics 7125
  */
@@ -18,8 +17,8 @@ public class CommandRobot extends TimedRobot {
 
     @SuppressWarnings("resource")
     public CommandRobot() {
-	super();
-	this.addPeriodic(CommandScheduler.getInstance()::run, kDefaultPeriod);
+        super();
+        this.addPeriodic(CommandScheduler.getInstance()::run, kDefaultPeriod);
     }
 
     @Override
@@ -57,5 +56,4 @@ public class CommandRobot extends TimedRobot {
 
     @Override
     public void testPeriodic() {}
-
 }

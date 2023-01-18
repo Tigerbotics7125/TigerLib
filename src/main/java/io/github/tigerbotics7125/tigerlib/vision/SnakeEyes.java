@@ -8,7 +8,6 @@ package io.github.tigerbotics7125.tigerlib.vision;
 import edu.wpi.first.math.geometry.*;
 import edu.wpi.first.net.PortForwarder;
 import edu.wpi.first.networktables.NetworkTableInstance;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -20,8 +19,8 @@ import org.photonvision.targeting.PhotonPipelineResult;
 import org.photonvision.targeting.PhotonTrackedTarget;
 
 /**
- * This class removes a lot of boiler plate code when designing vison logic, and
- * allows for some comfort features such as caching results.
+ * This class removes a lot of boiler plate code when designing vison logic, and allows for some
+ * comfort features such as caching results.
  *
  * @author Jeffrey Morris | Tigerboitcs 7125
  */
@@ -32,15 +31,17 @@ public class SnakeEyes {
 
     /** Transformation from robots center (x, y), and the floor (z) */
     protected Transform3d mRobotToCamera;
+
     protected PhotonPipelineResult mCachedResult;
 
     public SnakeEyes(String cameraName, Transform3d robotToCamera) {
-	this(NetworkTableInstance.getDefault(), cameraName, robotToCamera);
+        this(NetworkTableInstance.getDefault(), cameraName, robotToCamera);
     }
 
-    public SnakeEyes(NetworkTableInstance ntInstance, String cameraName, Transform3d robotToCamera) {
-	mCam = new PhotonCamera(ntInstance, cameraName);
-	mAprilTags = new HashMap<>();
+    public SnakeEyes(
+            NetworkTableInstance ntInstance, String cameraName, Transform3d robotToCamera) {
+        mCam = new PhotonCamera(ntInstance, cameraName);
+        mAprilTags = new HashMap<>();
     }
 
     //
@@ -49,7 +50,7 @@ public class SnakeEyes {
 
     /** Port forward the vision dashboard over rio usb connection. */
     public static void portforward() {
-	PortForwarder.add(5800, "10.71.25.11", 5800);
+        PortForwarder.add(5800, "10.71.25.11", 5800);
     }
 
     //
@@ -63,27 +64,27 @@ public class SnakeEyes {
      * @param tagPose
      */
     public void addAprilTag(int tagId, Pose3d tagPose) {
-	mAprilTags.put(tagId, tagPose);
+        mAprilTags.put(tagId, tagPose);
     }
 
     /** Turn the LEDs on. */
     public void ledsOn() {
-	mCam.setLED(VisionLEDMode.kOn);
+        mCam.setLED(VisionLEDMode.kOn);
     }
 
     /** Turn the LEDs off. */
     public void ledsOff() {
-	mCam.setLED(VisionLEDMode.kOff);
+        mCam.setLED(VisionLEDMode.kOff);
     }
 
     /** Blink the LEDs. */
     public void ledsBlink() {
-	mCam.setLED(VisionLEDMode.kBlink);
+        mCam.setLED(VisionLEDMode.kBlink);
     }
 
     /** Set the LEDs to their default mode. */
     public void ledsDefault() {
-	mCam.setLED(VisionLEDMode.kDefault);
+        mCam.setLED(VisionLEDMode.kDefault);
     }
 
     /**
@@ -92,7 +93,7 @@ public class SnakeEyes {
      * @param ledMode
      */
     public void setLeds(VisionLEDMode ledMode) {
-	mCam.setLED(ledMode);
+        mCam.setLED(ledMode);
     }
 
     /**
@@ -101,7 +102,7 @@ public class SnakeEyes {
      * @param index
      */
     public void setPipeline(int index) {
-	mCam.setPipelineIndex(index);
+        mCam.setPipelineIndex(index);
     }
 
     //
@@ -109,7 +110,7 @@ public class SnakeEyes {
     //
 
     public Transform3d getRobotToCamera() {
-	return mRobotToCamera;
+        return mRobotToCamera;
     }
 
     /**
@@ -117,104 +118,100 @@ public class SnakeEyes {
      * @return the Pose3d of the tag, null if tag has not been added.
      */
     public Pose3d getTagPose(int tagId) {
-	return mAprilTags.get(tagId);
+        return mAprilTags.get(tagId);
     }
 
     /**
-     * Returns and <b>caches</b> the latest result. Allows users to make this
-     * call without performing actions on the returned value.
+     * Returns and <b>caches</b> the latest result. Allows users to make this call without
+     * performing actions on the returned value.
      *
      * @return The latest result.
      */
     public PhotonPipelineResult getLatestResult() {
-	mCachedResult = mCam.getLatestResult();
-	return mCachedResult;
+        mCachedResult = mCam.getLatestResult();
+        return mCachedResult;
     }
 
     private PhotonPipelineResult getCachedResult() {
-	return mCachedResult == null ? getLatestResult() : mCachedResult;
+        return mCachedResult == null ? getLatestResult() : mCachedResult;
     }
 
     /** @return List of seen targets, if there are none, an empty list. */
     public List<PhotonTrackedTarget> getTargets() {
-	var results = getCachedResult();
-	return results.hasTargets() ? results.getTargets() : List.of();
+        var results = getCachedResult();
+        return results.hasTargets() ? results.getTargets() : List.of();
     }
 
-    /**
-     * @return If any targets are seen.
-     */
+    /** @return If any targets are seen. */
     public boolean hasTargets() {
-	return !getTargets().isEmpty();
+        return !getTargets().isEmpty();
     }
 
     /** @return The latency of the vision system in milli seconds. */
     public double getLatency() {
-	var results = getCachedResult();
-	return results.getLatencyMillis();
+        var results = getCachedResult();
+        return results.getLatencyMillis();
     }
 
     /** @return The timestamp of the latest result in seconds. */
     public double getTimestamp() {
-	var results = getCachedResult();
-	return results.getTimestampSeconds();
+        var results = getCachedResult();
+        return results.getTimestampSeconds();
     }
 
     /**
      * @param target The target to estimate robot pose by.
      * @return the Pose3d of the robot as known by the target.
-     * @throws IllegalArgumentException if target fiducial id is not in known
-     *                                  tags map.
+     * @throws IllegalArgumentException if target fiducial id is not in known tags map.
      */
     public Pose3d getRobotPose(PhotonTrackedTarget target) {
-	Pose3d targetPose = mAprilTags.get(target.getFiducialId());
+        Pose3d targetPose = mAprilTags.get(target.getFiducialId());
 
-	if (targetPose == null)
-	    throw new IllegalArgumentException("Target does not have known position.");
+        if (targetPose == null)
+            throw new IllegalArgumentException("Target does not have known position.");
 
-	Transform3d targetToCam = target.getBestCameraToTarget().inverse();
+        Transform3d targetToCam = target.getBestCameraToTarget().inverse();
 
-	return targetPose.transformBy(targetToCam).transformBy(mRobotToCamera.inverse());
+        return targetPose.transformBy(targetToCam).transformBy(mRobotToCamera.inverse());
     }
 
     /**
      * @param targetToFace
      * @param robotPose
-     * @return The heading the robot should be at if it were to face the target
-     *         head-on.
+     * @return The heading the robot should be at if it were to face the target head-on.
      */
     public Rotation2d getFaceTargetAngle(PhotonTrackedTarget targetToFace, Pose2d robotPose) {
-	// get tags pose
-	Pose2d tagPose = getTagPose(targetToFace.getFiducialId()).toPose2d();
+        // get tags pose
+        Pose2d tagPose = getTagPose(targetToFace.getFiducialId()).toPose2d();
 
-	// get the triangle from robot to tag
-	Transform2d robotToTag = new Transform2d(robotPose, tagPose);
+        // get the triangle from robot to tag
+        Transform2d robotToTag = new Transform2d(robotPose, tagPose);
 
-	// determine the reference angle
-	double angleToRotate = Math.atan2(robotToTag.getY(), robotToTag.getX());
+        // determine the reference angle
+        double angleToRotate = Math.atan2(robotToTag.getY(), robotToTag.getX());
 
-	// the heading which will make the robot face the tag is its current
-	// rotation
-	// rotated by the reference.
-	return robotPose.getRotation().rotateBy(new Rotation2d(angleToRotate));
+        // the heading which will make the robot face the tag is its current
+        // rotation
+        // rotated by the reference.
+        return robotPose.getRotation().rotateBy(new Rotation2d(angleToRotate));
     }
 
     /**
      * Removes tags which have ambiguities larger than the provided threshold.
      *
-     * @param tags               List of tags to edit.
-     * @param ambiguityThreshold tags with ambiguity values greater than this
-     *                           will be removed.
+     * @param tags List of tags to edit.
+     * @param ambiguityThreshold tags with ambiguity values greater than this will be removed.
      * @return The list of tags with ambiguous tags removed.
      */
-    public List<PhotonTrackedTarget> removeAmbiguousTags(List<PhotonTrackedTarget> tags, double ambiguityThreshold) {
-	List<PhotonTrackedTarget> ambiguousTags = new ArrayList<>();
-	tags.forEach((t) -> {
-	    if (t.getPoseAmbiguity() > ambiguityThreshold)
-		ambiguousTags.add(t);
-	});
-	ambiguousTags.forEach(tags::remove);
-	return tags;
+    public List<PhotonTrackedTarget> removeAmbiguousTags(
+            List<PhotonTrackedTarget> tags, double ambiguityThreshold) {
+        List<PhotonTrackedTarget> ambiguousTags = new ArrayList<>();
+        tags.forEach(
+                (t) -> {
+                    if (t.getPoseAmbiguity() > ambiguityThreshold) ambiguousTags.add(t);
+                });
+        ambiguousTags.forEach(tags::remove);
+        return tags;
     }
 
     /**
@@ -222,16 +219,17 @@ public class SnakeEyes {
      * @param ambiguityThreshold
      * @return The best tag
      */
-    public PhotonTrackedTarget getBestTag(PhotonTargetSortMode sortMode, double ambiguityThreshold) {
-	List<PhotonTrackedTarget> targets = new ArrayList<>(getTargets());
+    public PhotonTrackedTarget getBestTag(
+            PhotonTargetSortMode sortMode, double ambiguityThreshold) {
+        List<PhotonTrackedTarget> targets = new ArrayList<>(getTargets());
 
-	// remove tags which are too ambiguous
-	targets = removeAmbiguousTags(targets, ambiguityThreshold);
+        // remove tags which are too ambiguous
+        targets = removeAmbiguousTags(targets, ambiguityThreshold);
 
-	targets.sort(sortMode.getComparator());
+        targets.sort(sortMode.getComparator());
 
-	// after sorting, the best target is first in the list.
-	return targets.get(0);
+        // after sorting, the best target is first in the list.
+        return targets.get(0);
     }
 
     /**
@@ -239,15 +237,15 @@ public class SnakeEyes {
      * @return A list of estimated robot poses.
      */
     public List<Pose3d> getRobotPoseEstimates(double ambiguityThreshold) {
-	List<PhotonTrackedTarget> targets = getTargets();
-	targets = removeAmbiguousTags(targets, ambiguityThreshold);
+        List<PhotonTrackedTarget> targets = getTargets();
+        targets = removeAmbiguousTags(targets, ambiguityThreshold);
 
-	List<Pose3d> robotPoses = new ArrayList<>();
-	targets.forEach((target) -> {
-	    robotPoses.add(this.getRobotPose(target));
-	});
+        List<Pose3d> robotPoses = new ArrayList<>();
+        targets.forEach(
+                (target) -> {
+                    robotPoses.add(this.getRobotPose(target));
+                });
 
-	return robotPoses;
+        return robotPoses;
     }
-
 }
