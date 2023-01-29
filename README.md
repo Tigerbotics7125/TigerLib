@@ -11,7 +11,17 @@ TigerLib is a FRC library which holds many different utilities for programming a
 
 # Installation
 
-1. Add the JitPack repository to your `build.gradle` file.
+This is assuming you have already created a wpilib / gradle project.
+
+1. Open the `build.gradle` file.
+
+2. Add or edit the following lines to use Java 17.
+```groovy
+sourceCompatibility = JavaVersion.VERSION_17
+targetCompatibility = JavaVersion.VERSION_17
+```
+
+3. Add the following to add the Jitpack repository to your project.
 ``` groovy
 allprojects {
     repositories {
@@ -20,17 +30,21 @@ allprojects {
 }
 ```
 
-1. Add the dependency to your `build.gradle` file.
+4. Add the dependency within the `dependencies` block.
 > [![GitHub release (latest SemVer)](https://img.shields.io/github/v/release/tigerbotics7125/tigerlib?color=00aaff&label=Latest%3A)](https://github.com/Tigerbotics7125/TigerLib/releases)
 > [![GitHub release (latest SemVer including pre-releases)](https://img.shields.io/github/v/release/tigerbotics7125/tigerlib?color=ffff00&include_prereleases&label=pre-release%3A)](https://github.com/Tigerbotics7125/TigerLib/releases)
 ```groovy
 dependencies {
-    // check tag above for most recent version
+    // check icons above for most recent version
+    // do not include the 'v' in the version.
     implementation 'com.github.Tigerbotics7125:tigerlib:VERSION'
+    // ex: implementation 'com.github.Tigerbotics7125:tigerlib:2023.0.0'
 
     // ... other dependencies
 }
 ```
+
+5. Execute a the gradle build task, either in your terminal with `./gradlew build` or with the VSCode extension (Ctrl/Cmd + Shift + P, then search for: `> Gradle: Run a Gradle Build`).
 
 # Support
 
