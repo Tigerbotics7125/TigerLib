@@ -10,7 +10,25 @@ targetCompatibility = JavaVersion.VERSION_17
 
 wpi.java.debugJni = false;
 
+repositories {
+    mavenCentral()
+    maven { url 'https://jitpack.io' }
+    maven {
+        url 'https://maven.photonvision.org/repository/internal'
+    }
+    maven {
+        url 'https://maven.photonvision.org/repository/snapshots'
+    }
+}
+
+
 dependencies {
+
+    implementation 'edu.wpi.first.wpilibNewCommands:wpilibNewCommands-java:2023.2.1'
+
+    implementation 'org.photonvision:PhotonLib-java:v2023.2.1'
+    implementation 'org.photonvision:PhotonTargeting-java:v2023.2.1'
+
     implementation wpi.java.deps.wpilib()
     implementation wpi.java.vendor.java()
 
