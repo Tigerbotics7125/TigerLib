@@ -21,11 +21,16 @@ sourceCompatibility = JavaVersion.VERSION_17
 targetCompatibility = JavaVersion.VERSION_17
 ```
 
-3. Add the following to add the Jitpack repository to your project.
+3. Add the following to add the required repositories to your project.
 ``` groovy
-allprojects {
-    repositories {
-        maven { url 'https://jitpack.io' }
+repositories {
+    mavenCentral()
+    maven { url 'https://jitpack.io' }
+    maven {
+        url 'https://maven.photonvision.org/repository/internal'
+    }
+    maven {
+        url 'https://maven.photonvision.org/repository/snapshots'
     }
 }
 ```
