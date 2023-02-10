@@ -3,5 +3,6 @@ io.github.tigerbotics7125.tigerlib.input.controller
 io.github.tigerbotics7125.tigerlib.input.joystick
 io.github.tigerbotics7125.tigerlib.input.trigger
 io.github.tigerbotics7125.tigerlib.math
+io.github.tigerbotics7125.tigerlib.math.graph
 io.github.tigerbotics7125.tigerlib.util
 io.github.tigerbotics7125.tigerlib.vision
