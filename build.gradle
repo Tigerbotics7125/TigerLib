@@ -1,7 +1,7 @@
 plugins {
     id "java"
     id "maven-publish"
-    id "edu.wpi.first.GradleRIO" version "2023.2.1"
+    id "edu.wpi.first.GradleRIO" version "2023.3.2"
     id "com.diffplug.spotless" version "6.7.2"
 }
 
@@ -24,10 +24,10 @@ repositories {
 
 dependencies {
 
-    implementation 'edu.wpi.first.wpilibNewCommands:wpilibNewCommands-java:2023.2.1'
+    implementation 'edu.wpi.first.wpilibNewCommands:wpilibNewCommands-java:2023.3.2'
 
-    implementation 'org.photonvision:PhotonLib-java:v2023.2.1'
-    implementation 'org.photonvision:PhotonTargeting-java:v2023.2.1'
+    implementation 'org.photonvision:PhotonLib-java:v2023.3.0'
+    implementation 'org.photonvision:PhotonTargeting-java:v2023.3.0'
 
     implementation wpi.java.deps.wpilib()
     implementation wpi.java.vendor.java()
