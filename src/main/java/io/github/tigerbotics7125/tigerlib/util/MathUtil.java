@@ -84,4 +84,38 @@ public class MathUtil {
         }
         return c;
     }
+
+    /**
+     * @param x1
+     * @param x2
+     * @return The Euclidean distance between two points in 1D space.
+     */
+    public static double distance(double x1, double x2) {
+        return Math.sqrt(Math.pow(x2 - x1, 2));
+    }
+
+    /**
+     * @param x1
+     * @param y1
+     * @param x2
+     * @param y2
+     * @return The Euclidean distance between two points in 2D space.
+     */
+    public static double distance(double x1, double y1, double x2, double y2) {
+        return Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
+    }
+
+    /**
+     * @param x1
+     * @param y1
+     * @param z1
+     * @param x2
+     * @param y2
+     * @param z2
+     * @return The Euclidean distance between two points in 3D space.
+     */
+    public static double distance(
+            double x1, double y1, double z1, double x2, double y2, double z2) {
+        return Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2) + Math.pow(z2 - z1, 2));
+    }
 }
