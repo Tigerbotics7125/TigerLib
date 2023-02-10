@@ -58,11 +58,8 @@ publishing {
 }
 
 spotless {
-    // get enforce property
-    var enforceSpotless = project.properties["enforceSpotless"]
-    // set enforceCheck by converting string to boolean
-    // defaults to true if not set
-    enforceCheck = enforceSpotless != "false"
+    enforceCheck false
+    ratchetFrom 'origin/main'
     java {
         target fileTree('.') {
             include '**/*.java'
