@@ -26,8 +26,8 @@ dependencies {
 
     implementation 'edu.wpi.first.wpilibNewCommands:wpilibNewCommands-java:2023.3.2'
 
-    implementation 'org.photonvision:PhotonLib-java:v2023.3.0'
-    implementation 'org.photonvision:PhotonTargeting-java:v2023.3.0'
+    implementation 'org.photonvision:PhotonLib-java:v2023.4.0'
+    implementation 'org.photonvision:PhotonTargeting-java:v2023.4.0'
 
     implementation wpi.java.deps.wpilib()
     implementation wpi.java.vendor.java()
