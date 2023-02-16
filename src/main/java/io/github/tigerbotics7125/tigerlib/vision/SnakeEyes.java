@@ -42,6 +42,7 @@ public class SnakeEyes {
             NetworkTableInstance ntInstance, String cameraName, Transform3d robotToCamera) {
         mCam = new PhotonCamera(ntInstance, cameraName);
         mAprilTags = new HashMap<>();
+        mRobotToCamera = robotToCamera;
     }
 
     //
