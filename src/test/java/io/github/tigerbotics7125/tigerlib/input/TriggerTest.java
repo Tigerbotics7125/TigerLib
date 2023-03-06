@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Tigerbotics and it's members. All rights reserved.
+ * Copyright (c) 2022-2023 Tigerbotics and it's members. All rights reserved.
  * This work is licensed under the terms of the GNU GPLv3 license
  * found in the root directory of this project.
  */
@@ -48,9 +48,9 @@ public class TriggerTest {
 
     @Test
     public void whileLowTest() {
-        Trigger t = new Trigger(bool).activate(WHILE_LOW);
+        Trigger t = new Trigger(bool);
         Command c = new RunCommand(() -> {});
-        t.trigger(c);
+        t.trigger(WHILE_LOW, c);
 
         // not on when expected.
         b = true;
@@ -70,9 +70,9 @@ public class TriggerTest {
 
     @Test
     public void whileHighTest() {
-        Trigger t = new Trigger(bool).activate(WHILE_HIGH);
+        Trigger t = new Trigger(bool);
         Command c = new RunCommand(() -> {});
-        t.trigger(c);
+        t.trigger(WHILE_HIGH, c);
 
         // not on when expected.
         b = false;
@@ -93,9 +93,9 @@ public class TriggerTest {
     @Test
     public void onFallingTest() {
         b = false;
-        Trigger t = new Trigger(bool).activate(ON_FALLING);
+        Trigger t = new Trigger(bool);
         Command c = new RunCommand(() -> {}).repeatedly();
-        t.trigger(c);
+        t.trigger(ON_FALLING, c);
 
         // not on when expected.
         b = false;
@@ -120,9 +120,9 @@ public class TriggerTest {
     @Test
     public void onRisingTest() {
         b = true;
-        Trigger t = new Trigger(bool).activate(ON_RISING);
+        Trigger t = new Trigger(bool);
         Command c = new RunCommand(() -> {}).repeatedly();
-        t.trigger(c);
+        t.trigger(ON_RISING, c);
 
         // not on when expected.
         b = true;
@@ -146,52 +146,36 @@ public class TriggerTest {
 
     @Test
     public void compositionTest() {
-        Trigger f = new Trigger(() -> false).activate(WHILE_HIGH);
-        Trigger t = new Trigger(() -> true).activate(WHILE_HIGH);
+        Trigger f = new Trigger(() -> false);
+        Trigger t = new Trigger(() -> true);
 
-        assertFalse(f.get());
-        assertTrue(t.get());
+        assertFalse(f.getAsBoolean());
+        assertTrue(t.getAsBoolean());
 
-        assertFalse(f.and(t).get());
-        assertTrue(f.nand(t).get());
-        assertTrue(f.or(t).get());
-        assertTrue(f.xor(t).get());
-        assertFalse(f.nor(t).get());
-        assertFalse(f.xnor(t).get());
-        assertTrue(f.not().get());
-        assertFalse(t.not().get());
-    }
-
-    @Test
-    public void debounceTest() throws InterruptedException {
-        b = false;
-        Trigger t = new Trigger(bool).debounce(.01); // 10 ms
-
-        assertFalse(t.get());
-
-        b = true;
-
-        assertFalse(t.get());
-
-        Thread.sleep(11);
-
-        assertTrue(t.get());
+        assertFalse(f.and(t).getAsBoolean());
+        assertTrue(f.nand(t).getAsBoolean());
+        assertTrue(f.or(t).getAsBoolean());
+        assertTrue(f.xor(t).getAsBoolean());
+        assertFalse(f.nor(t).getAsBoolean());
+        assertFalse(f.xnor(t).getAsBoolean());
+        assertTrue(f.not().getAsBoolean());
+        assertFalse(t.not().getAsBoolean());
     }
 
     /** This is also the TriggerGroup test. */
     @Test
     public void cancelCommandOnDisable() {
         b = true;
-        Trigger t = new Trigger(bool).activate(WHILE_HIGH);
+        Trigger t = new Trigger(bool);
         TriggerGroup tg = new TriggerGroup();
         Command c = new RunCommand(() -> {});
 
-        t.trigger(c).join(tg);
+        t.trigger(WHILE_HIGH, c).join(tg);
         CommandScheduler.getInstance().run();
 
         assertTrue(c.isScheduled());
 
-        // disabled commands should immediately cancel any commands they are
+        // disabled triggers should immediately cancel any commands they are
         // triggering.
         t.disable();
         assertFalse(c.isScheduled());
