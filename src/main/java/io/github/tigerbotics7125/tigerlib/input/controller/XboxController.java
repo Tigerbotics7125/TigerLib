@@ -122,8 +122,8 @@ public class XboxController extends GenericHID {
         return mButtons.computeIfAbsent(XboxButton.RB, this::build);
     }
 
-    /** @return The back {@link JoystickTrigger}. */
-    public JoystickTrigger back() {
+    /** @return The select {@link JoystickTrigger}. */
+    public JoystickTrigger select() {
         return mButtons.computeIfAbsent(XboxButton.BACK, this::build);
     }
 
