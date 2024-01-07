@@ -1,3 +1,5 @@
+# TigerLib is now archived, files may still be used, but development has stopped.
+
 [![Build](https://github.com/Tigerbotics7125/TigerLib/actions/workflows/Build.yaml/badge.svg)](https://github.com/Tigerbotics7125/TigerLib/actions/workflows/Build.yaml)
 [![Lint](https://github.com/Tigerbotics7125/TigerLib/actions/workflows/Lint.yaml/badge.svg)](https://github.com/Tigerbotics7125/TigerLib/actions/workflows/Lint.yaml)
 [![Publish Documentation](https://github.com/Tigerbotics7125/TigerLib/actions/workflows/Documentation.yaml/badge.svg)](https://github.com/Tigerbotics7125/TigerLib/actions/workflows/Documentation.yaml)
